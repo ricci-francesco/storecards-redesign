@@ -494,14 +494,9 @@
     width: 280px; border-radius: 16px; overflow: hidden;
     background: #fff; box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
   }
-  .skel-image { width: 100%; height: 156px; background: #EFEFEF; animation: shimmer 1.4s infinite; }
+  .skel-image { width: 100%; height: 156px; background: #EFEFEF; }
   .skel-body { padding: 12px; display: flex; flex-direction: column; gap: 8px; }
-  .skel-line { height: 12px; border-radius: 6px; background: #EFEFEF; animation: shimmer 1.4s infinite; }
-  @keyframes shimmer {
-    0%   { background-color: #EFEFEF; }
-    50%  { background-color: #E0E0E0; }
-    100% { background-color: #EFEFEF; }
-  }
+  .skel-line { height: 12px; border-radius: 6px; background: #EFEFEF; }
 
   /* results area */
   .sim-results {
@@ -1919,17 +1914,6 @@
   function getActiveExperiments(surface, vertical) {
     const exps = [];
 
-    // Exp 1: Promotions position — StoreWall only
-    if (surface === 'StoreWall' || surface === 'DiscoveryWall') {
-      exps.push({
-        id: 'exp1', name: 'Exp 1 — Promotions Position',
-        variants: [
-          { label: 'Control', overrides: { promotionsPosition: 'overlay' } },
-          { label: 'Variant', overrides: { promotionsPosition: 'below' } },
-        ]
-      });
-    }
-
     // Exp 2a: InStorePricing lift — StoreWall · Food
     if ((surface === 'StoreWall' || surface === 'DiscoveryWall') && vertical === 'Food') {
       exps.push({
@@ -2111,8 +2095,8 @@
     const experiments = getActiveExperiments(surface, vertical);
     const output = document.getElementById('sim-output');
 
-    // clear skeleton
-    document.getElementById('sim-skeleton').style.display = 'none';
+    // clear state
+    Object.keys(SIM_STATE).forEach(k => delete SIM_STATE[k]);
 
     let html = '';
 
@@ -2172,12 +2156,12 @@
   function clearSimulator() {
     document.getElementById('sim-surface').value = '';
     document.getElementById('sim-vertical').value = '';
-    document.getElementById('sim-skeleton').style.display = 'flex';
-    const output = document.getElementById('sim-output');
-    output.innerHTML = `<div class="sim-skeleton" id="sim-skeleton">
-      <div class="skel-card"><div class="skel-image"></div><div class="skel-body"><div class="skel-line" style="width:60%"></div><div class="skel-line" style="width:85%"></div><div class="skel-line" style="width:40%"></div></div></div>
-      <div class="skel-card"><div class="skel-image"></div><div class="skel-body"><div class="skel-line" style="width:60%"></div><div class="skel-line" style="width:85%"></div><div class="skel-line" style="width:40%"></div></div></div>
-    </div>`;
+    Object.keys(SIM_STATE).forEach(k => delete SIM_STATE[k]);
+    document.getElementById('sim-output').innerHTML = `
+      <div class="sim-skeleton">
+        <div class="skel-card"><div class="skel-image"></div><div class="skel-body"><div class="skel-line" style="width:60%"></div><div class="skel-line" style="width:85%"></div><div class="skel-line" style="width:40%"></div></div></div>
+        <div class="skel-card"><div class="skel-image"></div><div class="skel-body"><div class="skel-line" style="width:60%"></div><div class="skel-line" style="width:85%"></div><div class="skel-line" style="width:40%"></div></div></div>
+      </div>`;
   }
 
   // ---- SIDEBAR ----
