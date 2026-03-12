@@ -368,6 +368,93 @@
   .arrow-divider .arrow { font-size: 28px; color: #bbb; }
 
   /* =====================
+     ANATOMY TAB STYLES
+  ===================== */
+  .definitions {
+    display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+    max-width: 780px; width: 100%;
+  }
+  .def-card {
+    background: #fff; border-radius: 10px;
+    padding: 12px 16px; flex: 1; min-width: 160px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
+  }
+  .def-card .def-label {
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 5px;
+  }
+  .def-card .def-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+  .def-card .def-desc { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+  .def-card .def-examples { margin-top: 6px; }
+  .ex-pill {
+    display: inline-block; padding: 2px 7px; border-radius: 4px;
+    font-size: 10px; font-weight: 600; margin: 2px 2px 0 0;
+  }
+
+  .annotation-layout {
+    display: flex; gap: 40px; align-items: flex-start;
+    justify-content: center; flex-wrap: wrap;
+    width: 100%; max-width: 780px;
+  }
+  .annotations-left, .annotations-right {
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .ann { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+  .ann.right { flex-direction: row-reverse; }
+  .ann-line { display: flex; flex-direction: column; align-items: flex-end; }
+  .ann.right .ann-line { align-items: flex-start; }
+  .ann-badge {
+    font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 600;
+    padding: 2px 8px; border-radius: 4px; text-transform: uppercase;
+    letter-spacing: 0.05em; white-space: nowrap;
+  }
+  .ann-desc {
+    font-size: 11px; color: var(--text-muted); text-align: right;
+    max-width: 160px; line-height: 1.4; margin-top: 2px;
+  }
+  .ann.right .ann-desc { text-align: left; }
+  .ann-connector { display: flex; align-items: center; flex-shrink: 0; }
+  .ann-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; border: 2px solid currentColor; }
+  .ann-dash { height: 1.5px; width: 32px; background: currentColor; opacity: 0.4; }
+
+  .m-core      { color: #1565C0; }
+  .m-promo     { color: #E65100; }
+  .m-highlight { color: #7B1FA2; }
+  .m-trust     { color: #C2185B; }
+  .m-feature   { color: #2E7D32; }
+
+  .badge-core      { background: #E3F2FD; color: #1565C0; }
+  .badge-promo     { background: #FFF8E1; color: #E65100; }
+  .badge-highlight { background: #F3E5F5; color: #7B1FA2; }
+  .badge-trust     { background: #FCE4EC; color: #C2185B; }
+  .badge-feature   { background: #E8F5E9; color: #2E7D32; }
+
+  .anatomy-legend {
+    display: flex; flex-direction: column; gap: 0;
+    width: 100%; max-width: 780px; background: #fff; border-radius: 12px;
+    padding: 20px 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
+  }
+  .legend-title {
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-muted);
+    border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 8px;
+  }
+  .legend-row {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 8px 0; border-bottom: 1px solid #F8F8F8;
+  }
+  .legend-row:last-child { border-bottom: none; }
+  .legend-badge { flex-shrink: 0; min-width: 96px; padding-top: 2px; }
+  .legend-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+  .legend-desc { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+  .legend-elements { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
+  .el-pill {
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    padding: 2px 7px; border-radius: 4px; background: #F5F5F5; color: #555;
+  }
+
+  /* =====================
      CONFIG TAB STYLES
   ===================== */
 
@@ -558,11 +645,185 @@
 <!-- TOP NAV -->
 <nav class="top-nav">
   <div class="nav-logo">StoreCard Experiments</div>
+  <button class="nav-btn" onclick="switchExp('anatomy', this)">🫀 StoreCard Anatomy</button>
   <button class="nav-btn active" onclick="switchExp('exp1', this)">Experiment 1 — Promotions Position</button>
   <button class="nav-btn" onclick="switchExp('exp2', this)">Experiment 2 — InStorePricing Lift</button>
   <button class="nav-btn" onclick="switchExp('exp3', this)">Experiment 3 — Small CardType</button>
   <button class="nav-btn" onclick="switchExp('config', this)">⚙ Configuration</button>
 </nav>
+
+<!-- ============================================================
+     STORECARD ANATOMY
+============================================================ -->
+<div class="exp-panel" id="anatomy">
+
+  <div class="page-header">
+    <div class="mono-label">StoreCard Anatomy</div>
+    <h1>Modules, Elements & Context Dimensions</h1>
+    <p>A StoreCard is a UI component made of independent modules. Each module contains elements rendered in a configurable priority order. The right config is selected based on two context dimensions.</p>
+  </div>
+
+  <!-- DEFINITIONS -->
+  <div class="definitions">
+    <div class="def-card">
+      <div class="def-label" style="color:#1565C0">Dimension 1</div>
+      <div class="def-title">Surface</div>
+      <div class="def-desc">Which screen of the app the StoreCard is rendered on.</div>
+      <div class="def-examples">
+        <span class="ex-pill" style="background:#E3F2FD;color:#1565C0">StoreWall</span>
+        <span class="ex-pill" style="background:#E3F2FD;color:#1565C0">Search</span>
+        <span class="ex-pill" style="background:#E3F2FD;color:#1565C0">DiscoveryWall</span>
+      </div>
+    </div>
+    <div class="def-card">
+      <div class="def-label" style="color:#7B1FA2">Dimension 2</div>
+      <div class="def-title">Vertical</div>
+      <div class="def-desc">The business category of the stores shown in that surface.</div>
+      <div class="def-examples">
+        <span class="ex-pill" style="background:#F3E5F5;color:#7B1FA2">Food</span>
+        <span class="ex-pill" style="background:#F3E5F5;color:#7B1FA2">Groceries</span>
+        <span class="ex-pill" style="background:#F3E5F5;color:#7B1FA2">Retail</span>
+      </div>
+    </div>
+    <div class="def-card">
+      <div class="def-label" style="color:#2E7D32">Config unit</div>
+      <div class="def-title">Module</div>
+      <div class="def-desc">A group of semantically related UI elements inside a StoreCard. Each module has a dedicated space and an internal priority hierarchy.</div>
+    </div>
+    <div class="def-card">
+      <div class="def-label" style="color:#E65100">Config unit</div>
+      <div class="def-title">Element</div>
+      <div class="def-desc">A single piece of information inside a module. The highest-priority available element in the hierarchy is the one rendered.</div>
+    </div>
+  </div>
+
+  <!-- ANNOTATED STORECARD -->
+  <div class="annotation-layout">
+
+    <!-- LEFT -->
+    <div class="annotations-left">
+      <div class="ann" style="margin-top:20px;">
+        <div class="ann-line">
+          <span class="ann-badge badge-highlight">Highlights</span>
+          <div class="ann-desc">One tag showing store's key differentiator. Hierarchy: Exclusivity → TopRated → New</div>
+        </div>
+        <div class="ann-connector m-highlight"><div class="ann-dash"></div><div class="ann-dot"></div></div>
+      </div>
+      <div class="ann" style="margin-top:8px;">
+        <div class="ann-line">
+          <span class="ann-badge badge-trust">Trust Markers</span>
+          <div class="ann-desc">Social or quality signal. Hierarchy: FriendsOrders → MostPopular → InStorePricing</div>
+        </div>
+        <div class="ann-connector m-trust"><div class="ann-dash"></div><div class="ann-dot"></div></div>
+      </div>
+      <div class="ann" style="margin-top:52px;">
+        <div class="ann-line">
+          <span class="ann-badge badge-core">Core Info</span>
+          <div class="ann-desc">Always-on module. StoreName · Rating · ETA · DeliveryFee · Sponsored</div>
+        </div>
+        <div class="ann-connector m-core"><div class="ann-dash"></div><div class="ann-dot"></div></div>
+      </div>
+      <div class="ann" style="margin-top:8px;">
+        <div class="ann-line">
+          <span class="ann-badge badge-promo">Promotions</span>
+          <div class="ann-desc">Active discount or offer. Position is configurable (overlay or dedicated row).</div>
+        </div>
+        <div class="ann-connector m-promo"><div class="ann-dash"></div><div class="ann-dot"></div></div>
+      </div>
+    </div>
+
+    <!-- STORECARD MOCK -->
+    <div class="storecard-large">
+      <div class="card-image">
+        <div class="img-overlay"></div>
+        <div class="food-emoji">🍕</div>
+        <div class="fav-btn">♡</div>
+        <div class="overlay-slots">
+          <div class="tag glovo"><div class="dot"></div>Only on Glovo</div>
+          <div class="tag pink">Ordered by friends</div>
+        </div>
+      </div>
+      <div class="card-core">
+        <div class="store-name">Honest Greens</div>
+        <div class="core-meta">
+          <span class="rating"><span class="star">★</span> 4.8</span>
+          <span class="sep">·</span><span>20–30 min</span>
+          <span class="sep">·</span><span>€2.49</span>
+          <span class="sep">·</span><span class="sponsored">Sponsored</span>
+        </div>
+      </div>
+      <div class="card-promotions">
+        <div class="tag orange"><div class="dot"></div>−20% Prime</div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="annotations-right">
+      <div class="ann right" style="margin-top:110px;">
+        <div class="ann-line">
+          <span class="ann-badge badge-feature">Features</span>
+          <div class="ann-desc" style="text-align:left">Store image, product carousel (TopSellers), or empty. Depends on card type (Large / Medium / Small).</div>
+        </div>
+        <div class="ann-connector m-feature"><div class="ann-dot"></div><div class="ann-dash"></div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MODULE LEGEND -->
+  <div class="anatomy-legend">
+    <div class="legend-title">Module reference — elements & hierarchy logic</div>
+    <div class="legend-row">
+      <div class="legend-badge"><span class="ann-badge badge-core">Core Info</span></div>
+      <div>
+        <div class="legend-name">Core Info</div>
+        <div class="legend-desc">Always ON. Fixed elements, always fully rendered. No fallback needed.</div>
+        <div class="legend-elements">
+          <span class="el-pill">StoreName</span><span class="el-pill">Rating</span><span class="el-pill">DeliveryTime</span><span class="el-pill">DeliveryFee</span><span class="el-pill">Sponsored</span>
+        </div>
+      </div>
+    </div>
+    <div class="legend-row">
+      <div class="legend-badge"><span class="ann-badge badge-promo">Promotions</span></div>
+      <div>
+        <div class="legend-name">Promotions</div>
+        <div class="legend-desc">ON/OFF. Single element — renders if a promotion is available for the store, hidden otherwise.</div>
+        <div class="legend-elements"><span class="el-pill">Promotion</span></div>
+      </div>
+    </div>
+    <div class="legend-row">
+      <div class="legend-badge"><span class="ann-badge badge-highlight">Highlights</span></div>
+      <div>
+        <div class="legend-name">Highlights</div>
+        <div class="legend-desc">ON/OFF. Shows the first available element in the hierarchy. If none available, module is hidden.</div>
+        <div class="legend-elements">
+          <span class="el-pill">Exclusivity</span><span class="el-pill">TopRated</span><span class="el-pill">New</span>
+        </div>
+      </div>
+    </div>
+    <div class="legend-row">
+      <div class="legend-badge"><span class="ann-badge badge-trust">Trust Markers</span></div>
+      <div>
+        <div class="legend-name">Trust Markers</div>
+        <div class="legend-desc">ON/OFF. Shows the first available element in the hierarchy. Order is the key experimentation lever.</div>
+        <div class="legend-elements">
+          <span class="el-pill">FriendsOrders</span><span class="el-pill">MostPopular</span><span class="el-pill">InStorePricing</span><span class="el-pill">FreshnessGuarantee</span>
+        </div>
+      </div>
+    </div>
+    <div class="legend-row">
+      <div class="legend-badge"><span class="ann-badge badge-feature">Features</span></div>
+      <div>
+        <div class="legend-name">Features</div>
+        <div class="legend-desc">ON/OFF. Visual feature — depends on card type. Large uses store image, Medium uses TopSellers carousel, Small has none.</div>
+        <div class="legend-elements">
+          <span class="el-pill">StorecardImage</span><span class="el-pill">TopSellers</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
 
 <!-- ============================================================
      EXPERIMENT 1
