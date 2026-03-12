@@ -645,10 +645,10 @@
 <!-- TOP NAV -->
 <nav class="top-nav">
   <div class="nav-logo">StoreCard Experiments</div>
-  <button class="nav-btn" onclick="switchExp('docs', this)">📎 Documentation</button>
+  <button class="nav-btn active" onclick="switchExp('docs', this)">📎 Documentation</button>
   <button class="nav-btn" onclick="switchExp('anatomy', this)">🫀 StoreCard Anatomy</button>
   <button class="nav-btn" onclick="switchExp('config', this)">⚙ Configuration</button>
-  <button class="nav-btn active" onclick="switchExp('exp1', this)">Experiment 1 — Promotions Position</button>
+  <button class="nav-btn" onclick="switchExp('exp1', this)">Experiment 1 — Promotions Position</button>
   <button class="nav-btn" onclick="switchExp('exp2', this)">Experiment 2 — InStorePricing Lift</button>
   <button class="nav-btn" onclick="switchExp('exp3', this)">Experiment 3 — Small CardType</button>
 </nav>
@@ -829,7 +829,7 @@
 <!-- ============================================================
      EXPERIMENT 1
 ============================================================ -->
-<div class="exp-panel active" id="exp1">
+<div class="exp-panel" id="exp1">
 
   <div class="page-header">
     <div class="mono-label">Experiment 1</div>
@@ -1231,7 +1231,7 @@
 <!-- ============================================================
      DOCUMENTATION
 ============================================================ -->
-<div class="exp-panel" id="docs">
+<div class="exp-panel active" id="docs">
 
   <div class="page-header">
     <div class="mono-label">Documentation</div>
@@ -1295,6 +1295,10 @@
       </div>
     </a>
 
+  </div>
+
+  <div style="font-size:12px; color:#aaa; text-align:center; margin-top:8px;">
+    Browse the other tabs to explore more content
   </div>
 
 </div>
