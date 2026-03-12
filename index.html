@@ -455,6 +455,127 @@
   }
 
   /* =====================
+     SIMULATOR STYLES
+  ===================== */
+  .sim-controls {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    width: 100%; max-width: 780px;
+    background: #fff; padding: 16px 20px; border-radius: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
+  }
+  .sim-select-wrap { display: flex; flex-direction: column; gap: 4px; }
+  .sim-select-label {
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted);
+  }
+  .sim-select {
+    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+    padding: 7px 32px 7px 12px; border-radius: 8px;
+    border: 1.5px solid var(--border); background: #FAFAFA; color: var(--text);
+    cursor: pointer; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 10px center;
+    min-width: 160px;
+  }
+  .sim-select:focus { outline: none; border-color: #1a1a1a; }
+  .sim-clear-btn {
+    font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500;
+    padding: 7px 16px; border-radius: 8px; border: 1.5px solid var(--border);
+    background: #fff; color: var(--text-muted); cursor: pointer; margin-top: 18px;
+    transition: all 0.12s;
+  }
+  .sim-clear-btn:hover { border-color: #aaa; color: var(--text); }
+
+  /* skeleton */
+  .sim-skeleton {
+    width: 100%; max-width: 780px; display: flex; gap: 24px; flex-wrap: wrap; justify-content: center;
+  }
+  .skel-card {
+    width: 280px; border-radius: 16px; overflow: hidden;
+    background: #fff; box-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
+  }
+  .skel-image { width: 100%; height: 156px; background: #EFEFEF; animation: shimmer 1.4s infinite; }
+  .skel-body { padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+  .skel-line { height: 12px; border-radius: 6px; background: #EFEFEF; animation: shimmer 1.4s infinite; }
+  @keyframes shimmer {
+    0%   { background-color: #EFEFEF; }
+    50%  { background-color: #E0E0E0; }
+    100% { background-color: #EFEFEF; }
+  }
+
+  /* results area */
+  .sim-results {
+    width: 100%; max-width: 900px;
+    display: flex; flex-direction: column; gap: 20px; align-items: center;
+  }
+  .sim-variant-group {
+    display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%;
+  }
+  .sim-variant-header {
+    display: flex; align-items: center; gap: 10px;
+    width: 100%; max-width: 780px;
+  }
+  .sim-variant-label {
+    font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    padding: 3px 10px; border-radius: 20px;
+  }
+  .sim-exp-badge {
+    font-size: 11px; color: var(--text-muted);
+    font-family: 'DM Mono', monospace;
+  }
+  .sim-cards-row {
+    display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; width: 100%;
+  }
+
+  /* sidebar overlay */
+  .sim-sidebar-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.25); z-index: 200;
+  }
+  .sim-sidebar-overlay.open { display: block; }
+  .sim-sidebar {
+    position: fixed; top: 0; right: -360px; width: 340px; height: 100vh;
+    background: #fff; z-index: 201; box-shadow: -4px 0 24px rgba(0,0,0,0.12);
+    display: flex; flex-direction: column;
+    transition: right 0.25s cubic-bezier(0.4,0,0.2,1);
+    overflow-y: auto;
+  }
+  .sim-sidebar.open { right: 0; }
+  .sidebar-header {
+    padding: 20px 20px 14px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .sidebar-title { font-size: 15px; font-weight: 700; color: var(--text); }
+  .sidebar-close {
+    width: 28px; height: 28px; border-radius: 50%; border: none;
+    background: #F0F0F0; cursor: pointer; font-size: 16px; color: #555;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .sidebar-body { padding: 16px 20px; display: flex; flex-direction: column; gap: 20px; }
+  .sidebar-variant-block { display: flex; flex-direction: column; gap: 8px; }
+  .sidebar-variant-name {
+    font-family: 'DM Mono', monospace; font-size: 10px; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--text-muted); margin-bottom: 4px;
+  }
+  .sidebar-h-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 10px; border-radius: 8px; background: #FAFAFA;
+    border: 1px solid transparent;
+  }
+  .sidebar-h-item.active-el {
+    background: #EEF4FF; border-color: #B8CEFF;
+  }
+  .sidebar-rank {
+    font-family: 'DM Mono', monospace; font-size: 10px; color: #bbb; width: 24px;
+  }
+  .sidebar-el-name { font-size: 12px; font-weight: 500; color: var(--text); flex: 1; }
+  .sidebar-active-badge {
+    font-size: 10px; font-family: 'DM Mono', monospace;
+    background: #E8F5E9; color: #2E7D32; padding: 1px 6px; border-radius: 4px;
+  }
+  .sidebar-divider { height: 1px; background: var(--border); }
+
+  /* =====================
      CONFIG TAB STYLES
   ===================== */
 
@@ -651,6 +772,7 @@
   <button class="nav-btn" onclick="switchExp('exp1', this)">Experiment 1 — Promotions Position</button>
   <button class="nav-btn" onclick="switchExp('exp2', this)">Experiment 2 — InStorePricing Lift</button>
   <button class="nav-btn" onclick="switchExp('exp3', this)">Experiment 3 — Small CardType</button>
+  <button class="nav-btn" onclick="switchExp('simulator', this)">▶ StoreCard Simulator</button>
 </nav>
 
 <!-- ============================================================
@@ -1502,6 +1624,75 @@
 
 </div>
 
+<!-- ============================================================
+     STORECARD SIMULATOR
+============================================================ -->
+<div class="exp-panel" id="simulator">
+
+  <div class="page-header">
+    <div class="mono-label">StoreCard Simulator</div>
+    <h1>Preview any context combination</h1>
+    <p>Select a Surface and Vertical to see how the StoreCard renders — including all active experiment variants.</p>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="sim-controls">
+    <div class="sim-select-wrap">
+      <div class="sim-select-label">Surface</div>
+      <select class="sim-select" id="sim-surface" onchange="runSimulator()">
+        <option value="">— select —</option>
+        <option value="StoreWall">StoreWall</option>
+        <option value="Search">Search</option>
+        <option value="DiscoveryWall">DiscoveryWall</option>
+      </select>
+    </div>
+    <div class="sim-select-wrap">
+      <div class="sim-select-label">Vertical</div>
+      <select class="sim-select" id="sim-vertical" onchange="runSimulator()">
+        <option value="">— select —</option>
+        <option value="Food">Food</option>
+        <option value="Groceries">Groceries</option>
+        <option value="Retail">Retail</option>
+      </select>
+    </div>
+    <button class="sim-clear-btn" onclick="clearSimulator()">✕ Clear</button>
+  </div>
+
+  <!-- OUTPUT -->
+  <div id="sim-output" class="sim-results">
+    <!-- skeleton shown by default -->
+    <div class="sim-skeleton" id="sim-skeleton">
+      <div class="skel-card">
+        <div class="skel-image"></div>
+        <div class="skel-body">
+          <div class="skel-line" style="width:60%"></div>
+          <div class="skel-line" style="width:85%"></div>
+          <div class="skel-line" style="width:40%"></div>
+        </div>
+      </div>
+      <div class="skel-card">
+        <div class="skel-image"></div>
+        <div class="skel-body">
+          <div class="skel-line" style="width:60%"></div>
+          <div class="skel-line" style="width:85%"></div>
+          <div class="skel-line" style="width:40%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- SIDEBAR OVERLAY -->
+<div class="sim-sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+<div class="sim-sidebar" id="sim-sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-title" id="sidebar-title">Module Hierarchy</div>
+    <button class="sidebar-close" onclick="closeSidebar()">×</button>
+  </div>
+  <div class="sidebar-body" id="sidebar-body"></div>
+</div>
+
 <script>
   function switchExp(id, btn) {
     document.querySelectorAll('.exp-panel').forEach(p => p.classList.remove('active'));
@@ -1670,6 +1861,389 @@
     const firstBtn = document.querySelector('.config-item-btn');
     if (firstBtn) showConfig('global', firstBtn);
   });
+
+  // =============================================
+  // SIMULATOR ENGINE
+  // =============================================
+
+  // Store data for simulator mock
+  const STORE_DATA = {
+    Food:      { emoji: '🍕', name: 'Honest Greens',    eta: '20–30 min', fee: '€2.49', rating: '4.8' },
+    Groceries: { emoji: '🛒', name: 'Carrefour Express', eta: '25–40 min', fee: '€1.99', rating: '4.6' },
+    Retail:    { emoji: '👟', name: 'Zara Home',         eta: '30–45 min', fee: '€2.99', rating: '4.5' },
+  };
+
+  // Base permanent configs — resolved per surface+vertical
+  function getBaseConfig(surface, vertical) {
+    // Search surfaces → Medium card
+    if (surface === 'Search') {
+      if (vertical === 'Food') {
+        return {
+          cardType: 'medium',
+          highlights: { on: true,  hierarchy: ['Exclusivity','TopRated','New'] },
+          trustMarkers: { on: true,  hierarchy: ['MostPopular','FriendsOrders','InStorePricing','FreshnessGuarantee'] },
+          promotions: { on: true },
+          features: { on: true, type: 'carousel' },
+        };
+      }
+      // Search · Any (Groceries, Retail inherit)
+      return {
+        cardType: 'medium',
+        highlights: { on: true,  hierarchy: ['Exclusivity','TopRated','New'] },
+        trustMarkers: { on: false, hierarchy: ['InStorePricing','MostPopular','FriendsOrders','FreshnessGuarantee'] },
+        promotions: { on: true },
+        features: { on: true, type: 'carousel' },
+      };
+    }
+    // StoreWall / DiscoveryWall → Large card
+    if (vertical === 'Groceries') {
+      return {
+        cardType: 'large',
+        highlights: { on: true, hierarchy: ['Exclusivity','TopRated','New'] },
+        trustMarkers: { on: true, hierarchy: ['InStorePricing','FreshnessGuarantee','MostPopular','FriendsOrders'] },
+        promotions: { on: true },
+        features: { on: true, type: 'image' },
+      };
+    }
+    // Global (Food, Retail on StoreWall/Discovery)
+    return {
+      cardType: 'large',
+      highlights: { on: true, hierarchy: ['Exclusivity','TopRated','New'] },
+      trustMarkers: { on: true, hierarchy: ['FriendsOrders','MostPopular','InStorePricing','FreshnessGuarantee'] },
+      promotions: { on: true },
+      features: { on: true, type: 'image' },
+    };
+  }
+
+  // Active experiments and their overrides per surface+vertical
+  function getActiveExperiments(surface, vertical) {
+    const exps = [];
+
+    // Exp 1: Promotions position — StoreWall only
+    if (surface === 'StoreWall' || surface === 'DiscoveryWall') {
+      exps.push({
+        id: 'exp1', name: 'Exp 1 — Promotions Position',
+        variants: [
+          { label: 'Control', overrides: { promotionsPosition: 'overlay' } },
+          { label: 'Variant', overrides: { promotionsPosition: 'below' } },
+        ]
+      });
+    }
+
+    // Exp 2a: InStorePricing lift — StoreWall · Food
+    if ((surface === 'StoreWall' || surface === 'DiscoveryWall') && vertical === 'Food') {
+      exps.push({
+        id: 'exp2a', name: 'Exp 2 — InStorePricing Lift (StoreWall)',
+        variants: [
+          { label: 'Control', overrides: {} },
+          { label: 'Variant', overrides: { trustMarkersHierarchy: ['InStorePricing','FriendsOrders','MostPopular','FreshnessGuarantee'] } },
+        ]
+      });
+    }
+
+    // Exp 2b: InStorePricing lift — Search · Food
+    if (surface === 'Search' && vertical === 'Food') {
+      exps.push({
+        id: 'exp2b', name: 'Exp 2 — InStorePricing Lift (Search)',
+        variants: [
+          { label: 'Control', overrides: { highlightsOn: true,  trustMarkersOn: false } },
+          { label: 'Variant', overrides: { highlightsOn: false, trustMarkersOn: true, trustMarkersHierarchy: ['InStorePricing','FriendsOrders','MostPopular','FreshnessGuarantee'] } },
+        ]
+      });
+    }
+
+    // Exp 3: Small CardType — StoreWall · Groceries
+    if ((surface === 'StoreWall' || surface === 'DiscoveryWall') && vertical === 'Groceries') {
+      exps.push({
+        id: 'exp3', name: 'Exp 3 — Small CardType',
+        variants: [
+          { label: 'Control', overrides: {} },
+          { label: 'Variant', overrides: { cardType: 'small', highlightsOn: false, trustMarkersOn: true, featuresOn: false } },
+        ]
+      });
+    }
+
+    return exps;
+  }
+
+  // Apply overrides to a base config copy
+  function applyOverrides(base, overrides) {
+    const cfg = JSON.parse(JSON.stringify(base));
+    if (overrides.cardType)               cfg.cardType = overrides.cardType;
+    if (overrides.promotionsPosition)     cfg.promotionsPosition = overrides.promotionsPosition;
+    if (overrides.trustMarkersHierarchy)  cfg.trustMarkers.hierarchy = overrides.trustMarkersHierarchy;
+    if (overrides.highlightsOn  !== undefined) cfg.highlights.on = overrides.highlightsOn;
+    if (overrides.trustMarkersOn !== undefined) cfg.trustMarkers.on = overrides.trustMarkersOn;
+    if (overrides.featuresOn    !== undefined) cfg.features.on = overrides.featuresOn;
+    return cfg;
+  }
+
+  // Tag style map
+  const TAG_STYLES = {
+    Exclusivity:        { cls: 'glovo',  label: 'Only on Glovo', dot: true },
+    TopRated:           { cls: 'glovo',  label: '⭐ Top Rated', dot: false },
+    New:                { cls: 'grey',   label: '✦ New', dot: false },
+    FriendsOrders:      { cls: 'pink',   label: 'Ordered by friends', dot: false },
+    MostPopular:        { cls: 'grey',   label: '🔥 Most Popular', dot: false },
+    InStorePricing:     { cls: 'blue',   label: 'Same prices as in store', dot: false },
+    FreshnessGuarantee: { cls: 'blue',   label: '🌿 Freshness Guarantee', dot: false },
+  };
+
+  function tagHTML(elementName) {
+    const t = TAG_STYLES[elementName] || { cls: 'grey', label: elementName, dot: false };
+    const dotHTML = t.dot ? `<div class="dot"></div>` : '';
+    return `<div class="tag ${t.cls}" style="cursor:pointer" onclick="event.stopPropagation()">${dotHTML}${t.label}</div>`;
+  }
+
+  // Build a storecard HTML given config + store data + module click handlers
+  function buildCard(cfg, store, cardId) {
+    const hlEl  = cfg.highlights.on    ? cfg.highlights.hierarchy[0]    : null;
+    const tmEl  = cfg.trustMarkers.on  ? cfg.trustMarkers.hierarchy[0]  : null;
+    const promoBelow = cfg.promotionsPosition === 'below';
+
+    if (cfg.cardType === 'large') {
+      const slot1 = hlEl  ? tagHTML(hlEl)  : '';
+      const slot2 = tmEl  ? tagHTML(tmEl)  : '';
+      const promoOverlay = !promoBelow && cfg.promotions.on ? `
+        <div class="overlay-single" style="bottom:10px;top:auto;left:auto;right:10px;">
+          <div class="tag orange"><div class="dot"></div>−20% Prime</div>
+        </div>` : '';
+      const promoBelowHTML = (promoBelow || (!promoBelow)) && cfg.promotions.on ? `
+        <div class="card-promotions">
+          <div class="tag orange"><div class="dot"></div>−20% Prime</div>
+        </div>` : '';
+
+      return `
+        <div class="storecard-large sim-card" id="${cardId}">
+          <div class="card-image">
+            <div class="img-overlay"></div>
+            <div class="food-emoji">${store.emoji}</div>
+            <div class="fav-btn">♡</div>
+            <div class="overlay-slots">
+              <span onclick="openSidebar('highlights','${cardId}')" style="cursor:pointer">${slot1}</span>
+              <span onclick="openSidebar('trustmarkers','${cardId}')" style="cursor:pointer">${slot2}</span>
+            </div>
+            ${promoOverlay}
+          </div>
+          <div class="card-core">
+            <div class="store-name">${store.name}</div>
+            <div class="core-meta">
+              <span class="rating"><span class="star">★</span> ${store.rating}</span>
+              <span class="sep">·</span><span>${store.eta}</span>
+              <span class="sep">·</span><span>🛵 ${store.fee}</span>
+              <span class="sep">·</span><span class="sponsored">Sponsored</span>
+            </div>
+          </div>
+          ${promoBelowHTML}
+        </div>`;
+    }
+
+    if (cfg.cardType === 'medium') {
+      const slotEl = cfg.highlights.on ? hlEl : (cfg.trustMarkers.on ? tmEl : null);
+      const slotModule = cfg.highlights.on ? 'highlights' : 'trustmarkers';
+      const slotTag = slotEl ? `<span onclick="openSidebar('${slotModule}','${cardId}')" style="cursor:pointer">${tagHTML(slotEl)}</span>` : '';
+      return `
+        <div class="storecard-medium sim-card" id="${cardId}">
+          <div class="card-top">
+            <div class="store-logo">${store.emoji}</div>
+            <div class="card-info">
+              ${slotTag}
+              <div>
+                <div class="store-name">${store.name}</div>
+                <div class="core-meta">
+                  <span class="rating"><span class="star">★</span> ${store.rating}</span>
+                  <span class="sep">·</span><span>${store.eta}</span>
+                  <span class="sep">·</span><span>🛵 ${store.fee}</span>
+                  <span class="sep">·</span><span class="sponsored">Sponsored</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          ${cfg.features.on ? `
+          <div class="card-carousel">
+            <div class="carousel-fade">
+              <div class="carousel-track">
+                <div class="product-tile"><div class="tile-image">🍔<div class="tile-discount">−20%</div><div class="tile-add">+</div></div><div class="tile-name">Product</div><div class="tile-price">9,99€</div></div>
+                <div class="product-tile"><div class="tile-image">🍟<div class="tile-discount">−20%</div><div class="tile-add">+</div></div><div class="tile-name">Product</div><div class="tile-price">7,99€</div></div>
+                <div class="product-tile"><div class="tile-image">🌮<div class="tile-discount">−20%</div><div class="tile-add">+</div></div><div class="tile-name">Product</div><div class="tile-price">8,49€</div></div>
+              </div>
+            </div>
+          </div>` : ''}
+        </div>`;
+    }
+
+    if (cfg.cardType === 'small') {
+      const slotEl = cfg.trustMarkers.on ? tmEl : (cfg.highlights.on ? hlEl : null);
+      const slotModule = cfg.trustMarkers.on ? 'trustmarkers' : 'highlights';
+      const slotTag = slotEl ? `<span onclick="openSidebar('${slotModule}','${cardId}')" style="cursor:pointer">${tagHTML(slotEl)}</span>` : '';
+      return `
+        <div class="storecard-small sim-card" id="${cardId}">
+          <div class="card-top">
+            <div class="store-logo">${store.emoji}</div>
+            <div class="card-info">
+              ${slotTag}
+              <div>
+                <div class="store-name">${store.name}</div>
+                <div class="core-meta">
+                  <span class="rating"><span class="star">★</span> ${store.rating}</span>
+                  <span class="sep">·</span><span>${store.eta}</span>
+                  <span class="sep">·</span><span>🛵 ${store.fee}</span>
+                  <span class="sep">·</span><span class="sponsored">Sponsored</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    }
+    return '';
+  }
+
+  // Store active configs for sidebar lookups
+  const SIM_STATE = {};
+
+  function runSimulator() {
+    const surface  = document.getElementById('sim-surface').value;
+    const vertical = document.getElementById('sim-vertical').value;
+    if (!surface || !vertical) return;
+
+    const store  = STORE_DATA[vertical] || STORE_DATA['Food'];
+    const base   = getBaseConfig(surface, vertical);
+    const experiments = getActiveExperiments(surface, vertical);
+    const output = document.getElementById('sim-output');
+
+    // clear skeleton
+    document.getElementById('sim-skeleton').style.display = 'none';
+
+    let html = '';
+
+    if (experiments.length === 0) {
+      // No experiments — just show the resolved config
+      const cardId = 'sim-card-base';
+      SIM_STATE[cardId] = base;
+      html += `
+        <div class="sim-variant-group">
+          <div class="sim-variant-header">
+            <span class="sim-variant-label" style="background:#F0F0F0;color:#555;">Resolved Config</span>
+            <span class="sim-exp-badge">No active experiments for this context</span>
+          </div>
+          <div class="sim-cards-row">${buildCard(base, store, cardId)}</div>
+        </div>`;
+    } else {
+      // Show each experiment's variants
+      experiments.forEach(exp => {
+        let variantsHTML = '';
+        exp.variants.forEach((v, vi) => {
+          const cardId = `sim-${exp.id}-v${vi}`;
+          const cfg = applyOverrides(base, v.overrides);
+          SIM_STATE[cardId] = cfg;
+          const isControl = v.label === 'Control';
+          variantsHTML += `
+            <div class="card-wrapper">
+              <span class="version-label ${isControl ? 'control' : 'variant'}">${v.label}</span>
+              ${buildCard(cfg, store, cardId)}
+            </div>`;
+        });
+        html += `
+          <div class="sim-variant-group">
+            <div class="sim-variant-header">
+              <span class="sim-variant-label" style="background:#FFF3E0;color:#E65100;">🧪 ${exp.name}</span>
+            </div>
+            <div class="sim-cards-row">${variantsHTML}</div>
+          </div>`;
+      });
+    }
+
+    // Context summary
+    const configKey = `${surface} · ${vertical}`;
+    html = `
+      <div style="width:100%;max-width:780px;display:flex;align-items:center;gap:8px;">
+        <span style="font-family:'DM Mono',monospace;font-size:11px;color:#888;">Context:</span>
+        <span style="font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:var(--text);">${configKey}</span>
+        <span style="font-family:'DM Mono',monospace;font-size:11px;color:#888;">·</span>
+        <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);">CardType: ${base.cardType}</span>
+        ${experiments.length > 0 ? `<span style="background:#FFF3E0;color:#E65100;font-family:'DM Mono',monospace;font-size:10px;padding:2px 8px;border-radius:4px;margin-left:4px;">${experiments.length} active experiment${experiments.length>1?'s':''}</span>` : ''}
+      </div>
+      <div class="section-header" style="max-width:780px;">${experiments.length > 0 ? 'Active experiments for this context' : 'Resolved configuration'}</div>
+    ` + html;
+
+    output.innerHTML = html;
+  }
+
+  function clearSimulator() {
+    document.getElementById('sim-surface').value = '';
+    document.getElementById('sim-vertical').value = '';
+    document.getElementById('sim-skeleton').style.display = 'flex';
+    const output = document.getElementById('sim-output');
+    output.innerHTML = `<div class="sim-skeleton" id="sim-skeleton">
+      <div class="skel-card"><div class="skel-image"></div><div class="skel-body"><div class="skel-line" style="width:60%"></div><div class="skel-line" style="width:85%"></div><div class="skel-line" style="width:40%"></div></div></div>
+      <div class="skel-card"><div class="skel-image"></div><div class="skel-body"><div class="skel-line" style="width:60%"></div><div class="skel-line" style="width:85%"></div><div class="skel-line" style="width:40%"></div></div></div>
+    </div>`;
+  }
+
+  // ---- SIDEBAR ----
+  function openSidebar(module, cardId) {
+    const cfg = SIM_STATE[cardId];
+    if (!cfg) return;
+
+    const surface  = document.getElementById('sim-surface').value;
+    const vertical = document.getElementById('sim-vertical').value;
+    const experiments = getActiveExperiments(surface, vertical);
+    const base = getBaseConfig(surface, vertical);
+
+    const isHighlights = module === 'highlights';
+    const moduleLabel = isHighlights ? 'Highlights' : 'Trust Markers';
+    document.getElementById('sidebar-title').textContent = moduleLabel + ' — Hierarchy';
+
+    const ranks = ['1st','2nd','3rd','4th','5th'];
+    let bodyHTML = '';
+
+    // If no experiments, just show the resolved hierarchy
+    if (experiments.length === 0) {
+      const hier = isHighlights ? cfg.highlights.hierarchy : cfg.trustMarkers.hierarchy;
+      const on   = isHighlights ? cfg.highlights.on : cfg.trustMarkers.on;
+      bodyHTML += `<div class="sidebar-variant-block">
+        <div class="sidebar-variant-name">Resolved hierarchy</div>
+        ${!on ? '<div style="font-size:12px;color:#bbb;">Module is OFF for this context</div>' : ''}
+        ${hier.map((el, i) => `
+          <div class="sidebar-h-item ${i===0 && on ? 'active-el' : ''}">
+            <span class="sidebar-rank">${ranks[i]||i+1}</span>
+            <span class="sidebar-el-name">${el}</span>
+            ${i===0 && on ? '<span class="sidebar-active-badge">shown</span>' : ''}
+          </div>`).join('')}
+      </div>`;
+    } else {
+      // Show per-experiment variant hierarchies
+      experiments.forEach(exp => {
+        exp.variants.forEach((v, vi) => {
+          const vCfg = applyOverrides(base, v.overrides);
+          const hier = isHighlights ? vCfg.highlights.hierarchy : vCfg.trustMarkers.hierarchy;
+          const on   = isHighlights ? vCfg.highlights.on : vCfg.trustMarkers.on;
+          const isControl = v.label === 'Control';
+          bodyHTML += `
+            <div class="sidebar-variant-block">
+              <div class="sidebar-variant-name" style="color:${isControl?'#C0392B':'#27AE60'}">${exp.name} — ${v.label}</div>
+              ${!on ? '<div style="font-size:12px;color:#bbb;padding:4px 0;">Module is OFF</div>' : ''}
+              ${on ? hier.map((el, i) => `
+                <div class="sidebar-h-item ${i===0 ? 'active-el' : ''}">
+                  <span class="sidebar-rank">${ranks[i]||i+1}</span>
+                  <span class="sidebar-el-name">${el}</span>
+                  ${i===0 ? '<span class="sidebar-active-badge">shown</span>' : ''}
+                </div>`).join('') : ''}
+            </div>
+            <div class="sidebar-divider"></div>`;
+        });
+      });
+    }
+
+    document.getElementById('sidebar-body').innerHTML = bodyHTML;
+    document.getElementById('sim-sidebar').classList.add('open');
+    document.getElementById('sidebar-overlay').classList.add('open');
+  }
+
+  function closeSidebar() {
+    document.getElementById('sim-sidebar').classList.remove('open');
+    document.getElementById('sidebar-overlay').classList.remove('open');
+  }
 </script>
 
 </body>
