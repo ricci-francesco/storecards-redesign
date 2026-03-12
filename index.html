@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StoreCard Experiments</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #F5F4F0;
+    --card-bg: #fff;
+    --text: #1a1a1a;
+    --text-muted: #888;
+    --border: #EBEBEB;
+    --orange: #FF6B35;
+    --yellow: #FFD700;
+    --pink-bg: #FFD6E0;
+    --pink-text: #C2185B;
+    --blue-bg: #DCEEFB;
+    --blue-text: #1565C0;
+    --grey-bg: #F0F0F0;
+    --grey-text: #555;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+  }
+
+  /* =====================
+     TOP NAV (experiment selector)
+  ===================== */
+  .top-nav {
+    width: 100%;
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 40px;
+    gap: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+
+  .nav-logo {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-right: 32px;
+    padding: 18px 0;
+    white-space: nowrap;
+  }
+
+  .nav-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 18px 20px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+  }
+  .nav-btn.active {
+    color: var(--text);
+    border-bottom-color: var(--text);
+  }
+  .nav-btn:hover:not(.active) { color: #555; }
+
+  /* =====================
+     EXPERIMENT PANELS
+  ===================== */
+  .exp-panel {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 48px 24px;
+    gap: 36px;
+  }
+  .exp-panel.active { display: flex; }
+
+  /* =====================
+     SHARED: PAGE HEADER
+  ===================== */
+  .page-header { text-align: center; }
+  .page-header .mono-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .page-header h1 { font-size: 22px; font-weight: 600; color: var(--text); }
+  .page-header p { font-size: 13px; color: var(--text-muted); margin-top: 6px; max-width: 500px; }
+
+  /* =====================
+     SHARED: SECTION HEADER
+  ===================== */
+  .section-header {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+    width: 100%;
+    max-width: 780px;
+  }
+
+  /* =====================
+     SHARED: SUB-TABS (Exp 2)
+  ===================== */
+  .sub-tabs {
+    display: flex;
+    border-bottom: 2px solid var(--border);
+    width: 100%;
+    max-width: 780px;
+  }
+  .sub-tab-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 500;
+    padding: 10px 24px;
+    border: none; background: none; cursor: pointer;
+    color: var(--text-muted);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .sub-tab-btn.active { color: var(--text); border-bottom-color: var(--text); }
+
+  .sub-panel { display: none; flex-direction: column; align-items: center; gap: 28px; width: 100%; }
+  .sub-panel.active { display: flex; }
+
+  /* =====================
+     SHARED: CARDS ROW
+  ===================== */
+  .cards-row {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .card-wrapper {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 12px;
+  }
+
+  /* =====================
+     SHARED: VERSION LABELS
+  ===================== */
+  .version-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 12px; border-radius: 20px; font-weight: 500;
+  }
+  .version-label.before, .version-label.control { background: #FFE8E8; color: #C0392B; }
+  .version-label.after,  .version-label.variant  { background: #E8F5E9; color: #27AE60; }
+
+  /* =====================
+     SHARED: TAGS
+  ===================== */
+  .tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 10px; font-weight: 600;
+    padding: 3px 8px; border-radius: 5px; white-space: nowrap;
+  }
+  .tag .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--yellow); flex-shrink: 0; }
+  .tag.glovo  { background: rgba(0,0,0,0.72); color: #fff; }
+  .tag.pink   { background: var(--pink-bg); color: var(--pink-text); }
+  .tag.blue   { background: var(--blue-bg); color: var(--blue-text); }
+  .tag.orange { background: var(--orange); color: #fff; font-size: 11px; padding: 4px 8px; }
+
+  /* =====================
+     SHARED: ANNOTATIONS
+  ===================== */
+  .annotation {
+    max-width: 300px; padding: 9px 12px; border-radius: 8px;
+    font-size: 11px; line-height: 1.5;
+    display: flex; gap: 7px; align-items: flex-start;
+  }
+  .annotation.problem, .annotation.control-note { background: #FFF0EE; color: #C0392B; border: 1px solid #FFD5CE; }
+  .annotation.solution, .annotation.variant-note { background: #F0FBF1; color: #27AE60; border: 1px solid #C8EFD0; }
+  .annotation .icon { flex-shrink: 0; }
+
+  /* =====================
+     SHARED: CONFIG NOTE
+  ===================== */
+  .config-note {
+    background: #1a1a1a; color: #e0e0e0;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; line-height: 1.7;
+    padding: 16px 20px; border-radius: 12px;
+    max-width: 700px; width: 100%;
+  }
+  .config-note .title {
+    color: #888; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px;
+  }
+  .config-note .hl  { color: #F4A623; }
+  .config-note .dim { color: #555; }
+  .config-note .grn { color: #7EC8A0; }
+
+  /* =====================
+     LARGE STORECARD
+  ===================== */
+  .storecard-large {
+    width: 280px; border-radius: 16px;
+    background: var(--card-bg);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
+    overflow: hidden;
+  }
+
+  .card-image {
+    position: relative; width: 100%; height: 156px;
+    background: linear-gradient(135deg, #2C3E50 0%, #4A6741 50%, #8B7355 100%);
+    overflow: hidden;
+  }
+  .card-image .img-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.32) 100%);
+  }
+  .card-image .food-emoji {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 52px; opacity: 0.9;
+  }
+  .fav-btn {
+    position: absolute; top: 10px; right: 10px;
+    width: 28px; height: 28px;
+    background: rgba(255,255,255,0.9); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; z-index: 2;
+  }
+  .overlay-slots {
+    position: absolute; top: 10px; left: 10px;
+    display: flex; flex-direction: column; gap: 4px; z-index: 2;
+  }
+  .overlay-single {
+    position: absolute; top: 10px; left: 10px; z-index: 2;
+  }
+  .overlay-bottom-right {
+    position: absolute; bottom: 10px; right: 10px; z-index: 2;
+  }
+
+  .card-core {
+    padding: 10px 12px 8px;
+    border-bottom: 1px solid #F0F0F0;
+  }
+  .store-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .core-meta {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 11px; color: var(--text-muted); flex-wrap: wrap;
+  }
+  .core-meta .rating { display: flex; align-items: center; gap: 2px; color: var(--text); font-weight: 500; }
+  .core-meta .star { color: #F4A623; font-size: 11px; }
+  .core-meta .sep { color: #ddd; }
+  .core-meta .sponsored { font-style: italic; font-size: 10px; color: #bbb; }
+
+  .card-promotions {
+    padding: 7px 12px; background: #FFFAF5;
+    border-top: 1px solid #FFF0E0; display: flex; gap: 6px;
+  }
+
+  /* =====================
+     MEDIUM STORECARD
+  ===================== */
+  .storecard-medium {
+    width: 300px; border-radius: 16px;
+    background: var(--card-bg);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
+    overflow: hidden;
+  }
+  .card-top {
+    display: flex; gap: 12px;
+    padding: 12px 12px 10px; align-items: stretch;
+  }
+  .store-logo {
+    width: 64px; height: 64px; border-radius: 12px;
+    border: 1px solid var(--border); background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; flex-shrink: 0;
+  }
+  .card-info {
+    flex: 1; display: flex; flex-direction: column;
+    justify-content: space-between; gap: 5px;
+  }
+  .card-carousel { padding: 0 12px 12px; position: relative; }
+  .carousel-fade { position: relative; overflow: hidden; }
+  .carousel-fade::after {
+    content: ''; position: absolute;
+    right: 0; top: 0; bottom: 0; width: 40px;
+    background: linear-gradient(to right, transparent, #fff);
+    pointer-events: none;
+  }
+  .carousel-track { display: flex; gap: 8px; overflow: hidden; }
+  .product-tile { flex-shrink: 0; width: 82px; }
+  .tile-image {
+    position: relative; width: 82px; height: 82px;
+    border-radius: 10px; background: var(--grey-bg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; margin-bottom: 5px; overflow: hidden;
+  }
+  .tile-discount {
+    position: absolute; top: 5px; left: 5px;
+    background: var(--orange); color: #fff;
+    font-size: 9px; font-weight: 700; padding: 2px 5px; border-radius: 4px;
+  }
+  .tile-add {
+    position: absolute; bottom: 5px; right: 5px;
+    width: 22px; height: 22px; background: #fff; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 300; color: var(--text);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  }
+  .tile-name { font-size: 11px; font-weight: 600; color: var(--text); line-height: 1.2; margin-bottom: 2px; }
+  .tile-price { font-size: 11px; color: var(--text-muted); }
+
+  /* =====================
+     SMALL STORECARD
+  ===================== */
+  .storecard-small {
+    width: 300px; border-radius: 16px;
+    background: var(--card-bg);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
+    overflow: hidden;
+  }
+  .storecard-small .card-top {
+    padding: 12px 12px 12px;
+  }
+
+  /* =====================
+     EXP1: ARROW DIVIDER
+  ===================== */
+  .arrow-divider {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 4px; padding-top: 32px;
+  }
+  .arrow-divider .exp-label {
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    color: #aaa; text-transform: uppercase;
+    letter-spacing: 0.08em; white-space: nowrap;
+  }
+  .arrow-divider .arrow { font-size: 28px; color: #bbb; }
+
+  /* =====================
+     CONFIG TAB STYLES
+  ===================== */
+
+  /* Config entries list */
+  .config-list {
+    display: flex; flex-direction: column; gap: 6px;
+    width: 100%; max-width: 780px;
+  }
+  .config-entry {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 16px; border-radius: 10px;
+    font-size: 13px; cursor: default;
+    transition: background 0.1s;
+  }
+  .config-entry.defined {
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.05);
+  }
+  .config-entry.undefined {
+    background: transparent;
+    border: 1px dashed #D0D0D0;
+    color: var(--text-muted);
+  }
+  .config-entry .entry-num {
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    color: #bbb; width: 20px; flex-shrink: 0;
+  }
+  .config-entry .entry-name {
+    font-weight: 600; flex: 1;
+  }
+  .config-entry.undefined .entry-name { font-weight: 400; }
+  .config-entry .entry-badge {
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    padding: 2px 8px; border-radius: 4px; white-space: nowrap;
+  }
+  .badge-defined { background: #E8F5E9; color: #2E7D32; }
+  .badge-inherits { background: #F5F5F5; color: #999; }
+  .config-entry .entry-arrow {
+    font-size: 11px; color: #bbb; font-family: 'DM Mono', monospace;
+    white-space: nowrap; flex-shrink: 0;
+  }
+
+  /* Config detail panel */
+  .config-detail-area {
+    display: flex; gap: 24px; width: 100%; max-width: 780px;
+    align-items: flex-start; flex-wrap: wrap;
+  }
+  .config-detail-left {
+    display: flex; flex-direction: column; gap: 6px;
+    width: 240px; flex-shrink: 0;
+  }
+  .config-detail-left .list-label {
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--text-muted); margin-bottom: 4px;
+  }
+  .config-item-btn {
+    text-align: left; padding: 9px 14px; border-radius: 8px;
+    border: none; cursor: pointer; font-family: 'DM Sans', sans-serif;
+    font-size: 12px; transition: background 0.12s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .config-item-btn.is-defined {
+    background: #fff; font-weight: 600; color: var(--text);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.05);
+  }
+  .config-item-btn.is-undefined {
+    background: transparent; color: var(--text-muted);
+    border: 1px dashed #D8D8D8;
+  }
+  .config-item-btn.active-item { background: #EEF4FF !important; color: #1a3a7a !important; border-color: #B8CEFF !important; box-shadow: 0 0 0 2px #B8CEFF; }
+  .config-item-btn .item-dot {
+    width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+  }
+  .dot-defined { background: #4CAF50; }
+  .dot-undefined { background: #D0D0D0; }
+
+  .config-detail-right {
+    flex: 1; min-width: 300px;
+    background: #fff; border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.04);
+    padding: 20px 24px; display: flex; flex-direction: column; gap: 16px;
+  }
+  .detail-header { display: flex; align-items: center; gap: 10px; }
+  .detail-title { font-size: 16px; font-weight: 700; color: var(--text); }
+  .detail-badge {
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    padding: 3px 9px; border-radius: 20px;
+  }
+  .detail-inherits-from {
+    font-size: 11px; color: var(--text-muted);
+    font-family: 'DM Mono', monospace;
+    background: #F5F5F5; padding: 6px 12px; border-radius: 6px;
+  }
+  .detail-module { display: flex; flex-direction: column; gap: 6px; }
+  .module-header {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; font-weight: 700; color: var(--text);
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .module-status {
+    font-size: 10px; font-family: 'DM Mono', monospace;
+    padding: 1px 6px; border-radius: 3px;
+  }
+  .status-on { background: #E8F5E9; color: #2E7D32; }
+  .status-off { background: #FAFAFA; color: #bbb; }
+  .module-changed { color: #1565C0; }
+  .hierarchy-list {
+    display: flex; flex-direction: column; gap: 3px; padding-left: 4px;
+  }
+  .h-item {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; color: var(--text-muted); padding: 2px 0;
+  }
+  .h-item .h-rank {
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    width: 28px; color: #ccc; flex-shrink: 0;
+  }
+  .h-item .h-name { color: var(--text); }
+  .h-item.changed .h-name { color: var(--blue-text); font-weight: 600; }
+  .divider-line { height: 1px; background: #F0F0F0; width: 100%; }
+
+  /* =====================
+     HIERARCHY DIAGRAM
+  ===================== */
+  .diagram-area {
+    width: 100%; max-width: 780px;
+    display: flex; flex-direction: column; gap: 0; align-items: center;
+  }
+  .diagram-layer {
+    display: flex; flex-direction: column; align-items: center;
+    width: 100%;
+  }
+  .layer-box {
+    background: #fff; border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.05);
+    padding: 14px 20px; width: 100%;
+    display: flex; align-items: flex-start; gap: 16px;
+  }
+  .layer-box.layer-global { border-left: 4px solid #1a1a1a; }
+  .layer-box.layer-surface { border-left: 4px solid #1565C0; }
+  .layer-box.layer-experiment { border-left: 4px solid #E65100; }
+  .layer-left { flex-shrink: 0; width: 160px; }
+  .layer-name {
+    font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 3px;
+  }
+  .layer-sublabel {
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    color: var(--text-muted); line-height: 1.4;
+  }
+  .layer-controls {
+    flex: 1; display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+  }
+  .ctrl-pill {
+    font-size: 11px; font-weight: 500;
+    padding: 4px 10px; border-radius: 20px; white-space: nowrap;
+  }
+  .ctrl-fixed   { background: #F0F0F0; color: #555; }
+  .ctrl-config  { background: #E3F2FD; color: #1565C0; }
+  .ctrl-exp     { background: #FFF3E0; color: #E65100; }
+  .ctrl-seg     { background: #F3E5F5; color: #7B1FA2; }
+
+  .layer-connector {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 4px 0; gap: 0;
+  }
+  .connector-line { width: 2px; height: 20px; background: #D0D0D0; }
+  .connector-label {
+    font-family: 'DM Mono', monospace; font-size: 9px;
+    color: #bbb; text-transform: uppercase; letter-spacing: 0.08em;
+    background: var(--bg); padding: 0 6px;
+  }
+
+  .resolution-rule {
+    background: #1a1a1a; color: #e0e0e0;
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    line-height: 1.7; padding: 14px 18px; border-radius: 10px;
+    width: 100%; max-width: 780px;
+  }
+  .resolution-rule .rr-title {
+    color: #888; font-size: 10px; text-transform: uppercase;
+    letter-spacing: 0.1em; margin-bottom: 8px;
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="top-nav">
+  <div class="nav-logo">StoreCard Experiments</div>
+  <button class="nav-btn active" onclick="switchExp('exp1', this)">Experiment 1 — Promotions Position</button>
+  <button class="nav-btn" onclick="switchExp('exp2', this)">Experiment 2 — InStorePricing Lift</button>
+  <button class="nav-btn" onclick="switchExp('exp3', this)">Experiment 3 — Small CardType</button>
+  <button class="nav-btn" onclick="switchExp('config', this)">⚙ Configuration</button>
+</nav>
+
+<!-- ============================================================
+     EXPERIMENT 1
+============================================================ -->
+<div class="exp-panel active" id="exp1">
+
+  <div class="page-header">
+    <div class="mono-label">Experiment 1</div>
+    <h1>Promotions Tag Position</h1>
+    <p>Test whether moving the Promotions tag out of the store image into a dedicated row below Core Info improves conversion.</p>
+  </div>
+
+  <div class="section-header">StoreWall · Food — Large Storecard</div>
+
+  <div class="cards-row">
+
+    <!-- CONTROL -->
+    <div class="card-wrapper">
+      <span class="version-label before">Control</span>
+      <div class="storecard-large">
+        <div class="card-image">
+          <div class="img-overlay"></div>
+          <div class="food-emoji">🍕</div>
+          <div class="fav-btn">♡</div>
+          <!-- Promo tag top-left -->
+          <div class="overlay-single">
+            <div class="tag orange"><div class="dot"></div>−20% Prime</div>
+          </div>
+          <!-- Exclusivity bottom-right -->
+          <div class="overlay-bottom-right">
+            <div class="tag glovo"><div class="dot"></div>Only on Glovo</div>
+          </div>
+        </div>
+        <div class="card-core">
+          <div class="store-name">Honest Greens</div>
+          <div class="core-meta">
+            <span class="rating"><span class="star">★</span> 4.8</span>
+            <span class="sep">·</span><span>20–30 min</span>
+            <span class="sep">·</span><span>€2.49</span>
+            <span class="sep">·</span><span class="sponsored">Sponsored</span>
+          </div>
+        </div>
+      </div>
+      <div class="annotation problem">
+        <span class="icon">⚠️</span>
+        <span>Promotion tag overlaps store image. Exclusivity tag buried bottom-right.</span>
+      </div>
+    </div>
+
+    <!-- ARROW -->
+    <div class="arrow-divider">
+      <span class="exp-label">Experiment</span>
+      <span class="arrow">→</span>
+    </div>
+
+    <!-- VARIANT -->
+    <div class="card-wrapper">
+      <span class="version-label after">Variant</span>
+      <div class="storecard-large">
+        <div class="card-image">
+          <div class="img-overlay"></div>
+          <div class="food-emoji">🍕</div>
+          <div class="fav-btn">♡</div>
+          <!-- Exclusivity moves to top-left -->
+          <div class="overlay-single">
+            <div class="tag glovo"><div class="dot"></div>Only on Glovo</div>
+          </div>
+        </div>
+        <div class="card-core">
+          <div class="store-name">Honest Greens</div>
+          <div class="core-meta">
+            <span class="rating"><span class="star">★</span> 4.8</span>
+            <span class="sep">·</span><span>20–30 min</span>
+            <span class="sep">·</span><span>€2.49</span>
+            <span class="sep">·</span><span class="sponsored">Sponsored</span>
+          </div>
+        </div>
+        <!-- Promotions moves below CoreInfo -->
+        <div class="card-promotions">
+          <div class="tag orange"><div class="dot"></div>−20% Prime</div>
+        </div>
+      </div>
+      <div class="annotation solution">
+        <span class="icon">✓</span>
+        <span>Clean image. Exclusivity prominent top-left. Promotions in dedicated row below CoreInfo.</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="config-note">
+    <div class="title">Config change — Experiment 1</div>
+    <span class="dim">// Promotions moves out of image into dedicated row below CoreInfo</span><br>
+    <span class="dim">// Highlights (Exclusivity) takes over top-left image overlay slot</span><br><br>
+    <span class="dim">BEFORE &nbsp;</span><span class="hl">Promotions.position = overlay(image, top-left)</span><br>
+    <span class="dim">BEFORE &nbsp;</span><span class="hl">Highlights.position  = overlay(image, bottom-right)</span><br><br>
+    <span class="dim">AFTER &nbsp;&nbsp;</span><span class="grn">Promotions.position = below(CoreInfo)</span><br>
+    <span class="dim">AFTER &nbsp;&nbsp;</span><span class="grn">Highlights.position  = overlay(image, top-left)</span><br><br>
+    <span class="dim">// Scope: experiment layer, temporary · Surfaces: StoreWall only</span>
+  </div>
+
+</div>
+
+<!-- ============================================================
+     EXPERIMENT 2
+============================================================ -->
+<div class="exp-panel" id="exp2">
+
+  <div class="page-header">
+    <div class="mono-label">Experiment 2</div>
+    <h1>InStorePricing Priority Lift — Food</h1>
+    <p>Test whether promoting InStorePricing to the top of the TrustMarkers hierarchy in Food screens increases conversion.</p>
+  </div>
+
+  <!-- SUB-TABS -->
+  <div class="sub-tabs">
+    <button class="sub-tab-btn active" onclick="switchSub('storewall', this)">StoreWall · Food</button>
+    <button class="sub-tab-btn" onclick="switchSub('search', this)">Search · Food</button>
+  </div>
+
+  <!-- SUB-TAB: STOREWALL -->
+  <div class="sub-panel active" id="sub-storewall">
+
+    <div class="section-header">Large Storecard — Two image overlay slots</div>
+
+    <div class="cards-row">
+
+      <!-- CONTROL -->
+      <div class="card-wrapper">
+        <span class="version-label control">Control</span>
+        <div class="storecard-large">
+          <div class="card-image">
+            <div class="img-overlay"></div>
+            <div class="food-emoji">🍕</div>
+            <div class="fav-btn">♡</div>
+            <div class="overlay-slots">
+              <div class="tag glovo"><div class="dot"></div>Only on Glovo</div>
+              <div class="tag pink">Ordered by friends</div>
+            </div>
+          </div>
+          <div class="card-core">
+            <div class="store-name">Honest Greens</div>
+            <div class="core-meta">
+              <span class="rating"><span class="star">★</span> 4.8</span>
+              <span class="sep">·</span><span>20–30 min</span>
+              <span class="sep">·</span><span>€2.49</span>
+              <span class="sep">·</span><span class="sponsored">Sponsored</span>
+            </div>
+          </div>
+          <div class="card-promotions">
+            <div class="tag orange"><div class="dot"></div>−20% Prime</div>
+          </div>
+        </div>
+        <div class="annotation control-note">
+          <span class="icon">◉</span>
+          <span>Slot 2: <strong>FriendsOrders</strong> — #1 in Global TrustMarkers hierarchy</span>
+        </div>
+      </div>
+
+      <!-- VARIANT -->
+      <div class="card-wrapper">
+        <span class="version-label variant">Variant</span>
+        <div class="storecard-large">
+          <div class="card-image">
+            <div class="img-overlay"></div>
+            <div class="food-emoji">🍕</div>
+            <div class="fav-btn">♡</div>
+            <div class="overlay-slots">
+              <div class="tag glovo"><div class="dot"></div>Only on Glovo</div>
+              <div class="tag blue">Same prices as in store</div>
+            </div>
+          </div>
+          <div class="card-core">
+            <div class="store-name">Honest Greens</div>
+            <div class="core-meta">
+              <span class="rating"><span class="star">★</span> 4.8</span>
+              <span class="sep">·</span><span>20–30 min</span>
+              <span class="sep">·</span><span>€2.49</span>
+              <span class="sep">·</span><span class="sponsored">Sponsored</span>
+            </div>
+          </div>
+          <div class="card-promotions">
+            <div class="tag orange"><div class="dot"></div>−20% Prime</div>
+          </div>
+        </div>
+        <div class="annotation variant-note">
+          <span class="icon">◉</span>
+          <span>Slot 2: <strong>InStorePricing</strong> — promoted to #1 by experiment override</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- SUB-TAB: SEARCH -->
+  <div class="sub-panel" id="sub-search">
+
+    <div class="section-header">Medium Storecard — Single tag slot (Highlight OR TrustMarker)</div>
+
+    <div class="cards-row">
+
+      <!-- CONTROL -->
+      <div class="card-wrapper">
+        <span class="version-label control">Control</span>
+        <div class="storecard-medium">
+          <div class="card-top">
+            <div class="store-logo">🍗</div>
+            <div class="card-info">
+              <div class="tag glovo"><div class="dot"></div>Only on Glovo</div>
+              <div>
+                <div class="store-name">Honest Greens</div>
+                <div class="core-meta">
+                  <span class="rating"><span class="star">★</span> 4.8</span>
+                  <span class="sep">·</span><span>20–30 min</span>
+                  <span class="sep">·</span><span>🛵 2,49€</span>
+                  <span class="sep">·</span><span class="sponsored">Sponsored</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-carousel">
+            <div class="carousel-fade">
+              <div class="carousel-track">
+                <div class="product-tile">
+                  <div class="tile-image">🍔<div class="tile-discount">−20%</div><div class="tile-add">+</div></div>
+                  <div class="tile-name">Product name</div><div class="tile-price">9,99€</div>
+                </div>
+                <div class="product-tile">
+                  <div class="tile-image">🍟<div class="tile-discount">−20%</div><div class="tile-add">+</div></div>
+                  <div class="tile-name">Product name</div><div class="tile-price">9,99€</div>
+                </div>
+                <div class="product-tile">
+                  <div class="tile-image">🌮<div class="tile-discount">−20%</div><div class="tile-add">+</div></div>
+                  <div class="tile-name">Product name</div><div class="tile-price">9,99€</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="annotation control-note">
+          <span class="icon">◉</span>
+          <span><strong>Highlights ON</strong> / TrustMarkers OFF — slot shows "Only on Glovo"</span>
+        </div>
+      </div>
+
+      <!-- VARIANT -->
+      <div class="card-wrapper">
+        <span class="version-label variant">Variant</span>
+        <div class="storecard-medium">
+          <div class="card-top">
+            <div class="store-logo">🍗</div>
+            <div class="card-info">
+              <div class="tag blue">Same prices as in store</div>
+              <div>
+                <div class="store-name">Honest Greens</div>
+                <div class="core-meta">
+                  <span class="rating"><span class="star">★</span> 4.8</span>
+                  <span class="sep">·</span><span>20–30 min</span>
+                  <span class="sep">·</span><span>🛵 2,49€</span>
+                  <span class="sep">·</span><span class="sponsored">Sponsored</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-carousel">
+            <div class="carousel-fade">
+              <div class="carousel-track">
+                <div class="product-tile">
+                  <div class="tile-image">🍔<div class="tile-discount">−20%</div><div class="tile-add">+</div></div>
+                  <div class="tile-name">Product name</div><div class="tile-price">9,99€</div>
+                </div>
+                <div class="product-tile">
+                  <div class="tile-image">🍟<div class="tile-discount">−20%</div><div class="tile-add">+</div></div>
+                  <div class="tile-name">Product name</div><div class="tile-price">9,99€</div>
+                </div>
+                <div class="product-tile">
+                  <div class="tile-image">🌮<div class="tile-discount">−20%</div><div class="tile-add">+</div></div>
+                  <div class="tile-name">Product name</div><div class="tile-price">9,99€</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="annotation variant-note">
+          <span class="icon">◉</span>
+          <span>Highlights OFF / <strong>TrustMarkers ON</strong> — slot shows "Same prices as in store"</span>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="config-note">
+    <div class="title">Config change — Experiment 2</div>
+    <span class="dim">// Experiment layer — temporary override, does not modify permanent config</span><br><br>
+    <span class="dim">STOREWALL · FOOD</span><br>
+    <span class="dim">Control &nbsp;(Global) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="hl">TrustMarkers: FriendsOrders &gt; MostPopular &gt; InStorePricing &gt; FreshnessGuarantee</span><br>
+    <span class="dim">Variant &nbsp;(Exp override) &nbsp;</span><span class="grn">TrustMarkers: InStorePricing &gt; FriendsOrders &gt; MostPopular &gt; FreshnessGuarantee</span><br><br>
+    <span class="dim">SEARCH · FOOD</span><br>
+    <span class="dim">Control &nbsp;(Search·Food) &nbsp;&nbsp;</span><span class="hl">Highlights: ON · TrustMarkers: OFF</span><br>
+    <span class="dim">Variant &nbsp;(Exp override) &nbsp;</span><span class="grn">Highlights: OFF · TrustMarkers: ON | InStorePricing &gt; FriendsOrders &gt; MostPopular</span><br><br>
+    <span class="dim">// All other modules unchanged</span>
+  </div>
+
+</div>
+
+<!-- ============================================================
+     EXPERIMENT 3
+============================================================ -->
+<div class="exp-panel" id="exp3">
+
+  <div class="page-header">
+    <div class="mono-label">Experiment 3</div>
+    <h1>Small CardType Test — Groceries StoreWall</h1>
+    <p>Test whether a compact Small card (logo + CoreInfo + single tag, no image) outperforms the current Large card in the Groceries StoreWall.</p>
+  </div>
+
+  <div class="section-header">StoreWall · Groceries — Large vs Small</div>
+
+  <div class="cards-row">
+
+    <!-- CONTROL: Large -->
+    <div class="card-wrapper">
+      <span class="version-label control">Control — Large</span>
+      <div class="storecard-large">
+        <div class="card-image">
+          <div class="img-overlay"></div>
+          <div class="food-emoji">🛒</div>
+          <div class="fav-btn">♡</div>
+          <div class="overlay-slots">
+            <div class="tag glovo"><div class="dot"></div>Only on Glovo</div>
+            <div class="tag blue">Same prices as in store</div>
+          </div>
+        </div>
+        <div class="card-core">
+          <div class="store-name">Carrefour Express</div>
+          <div class="core-meta">
+            <span class="rating"><span class="star">★</span> 4.6</span>
+            <span class="sep">·</span><span>25–40 min</span>
+            <span class="sep">·</span><span>€1.99</span>
+            <span class="sep">·</span><span class="sponsored">Sponsored</span>
+          </div>
+        </div>
+        <div class="card-promotions">
+          <div class="tag orange"><div class="dot"></div>−10% when you spend €30</div>
+        </div>
+      </div>
+      <div class="annotation control-note">
+        <span class="icon">◉</span>
+        <span>Large card — store image, two overlay slots, Promotions row. <strong>StoreWall · Groceries</strong> defined config.</span>
+      </div>
+    </div>
+
+    <!-- VARIANT: Small -->
+    <div class="card-wrapper">
+      <span class="version-label variant">Variant — Small</span>
+      <div class="storecard-small">
+        <div class="card-top">
+          <div class="store-logo">🛒</div>
+          <div class="card-info">
+            <!-- Single tag slot: TrustMarkers ON, Highlights OFF -->
+            <div class="tag blue">Same prices as in store</div>
+            <div>
+              <div class="store-name">Carrefour Express</div>
+              <div class="core-meta">
+                <span class="rating"><span class="star">★</span> 4.6</span>
+                <span class="sep">·</span><span>25–40 min</span>
+                <span class="sep">·</span><span>€1.99</span>
+                <span class="sep">·</span><span class="sponsored">Sponsored</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="annotation variant-note">
+        <span class="icon">◉</span>
+        <span>Small card — logo + CoreInfo + single tag only. No image, no carousel, no Promotions row. Slot shows <strong>InStorePricing</strong> TrustMarker.</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="config-note">
+    <div class="title">Config change — Experiment 3</div>
+    <span class="dim">// Experiment layer — temporary override on StoreWall · Groceries</span><br><br>
+    <span class="dim">CONTROL &nbsp;(StoreWall · Groceries defined config)</span><br>
+    <span class="dim">&nbsp;&nbsp;CardType     : </span><span class="hl">Large</span><br>
+    <span class="dim">&nbsp;&nbsp;Highlights   : ON  | slot=image-overlay-1 | Exclusivity &gt; TopRated &gt; New</span><br>
+    <span class="dim">&nbsp;&nbsp;TrustMarkers : ON  | slot=image-overlay-2 | InStorePricing &gt; FreshnessGuarantee &gt; MostPopular &gt; FriendsOrders</span><br>
+    <span class="dim">&nbsp;&nbsp;Features     : ON  | StorecardImage</span><br><br>
+    <span class="dim">VARIANT &nbsp;(Exp override)</span><br>
+    <span class="dim">&nbsp;&nbsp;CardType     : </span><span class="grn">Small</span><br>
+    <span class="dim">&nbsp;&nbsp;Highlights   : </span><span class="grn">OFF</span><br>
+    <span class="dim">&nbsp;&nbsp;TrustMarkers : </span><span class="grn">ON  | slot=info-row | InStorePricing &gt; FreshnessGuarantee &gt; MostPopular &gt; FriendsOrders</span><br>
+    <span class="dim">&nbsp;&nbsp;Features     : </span><span class="grn">OFF</span><br><br>
+    <span class="dim">// ⚠ Note: experiment conflates card size reduction with information density reduction.</span><br>
+    <span class="dim">// If variant wins, follow-up experiment needed to decompose the two effects.</span>
+  </div>
+
+</div>
+
+<!-- ============================================================
+     CONFIGURATION
+============================================================ -->
+<div class="exp-panel" id="config">
+
+  <div class="page-header">
+    <div class="mono-label">Configuration</div>
+    <h1>StoreCard Config System</h1>
+    <p>4 defined configs covering all 11 surface × vertical combinations through layered inheritance.</p>
+  </div>
+
+  <!-- SUB-TABS -->
+  <div class="sub-tabs">
+    <button class="sub-tab-btn active" onclick="switchSub('cfg-entries', this)">Config Entries</button>
+    <button class="sub-tab-btn" onclick="switchSub('cfg-diagram', this)">Hierarchy Diagram</button>
+  </div>
+
+  <!-- SUB-TAB 1: CONFIG ENTRIES -->
+  <div class="sub-panel active" id="sub-cfg-entries">
+
+    <div class="section-header">All surface × vertical combinations</div>
+
+    <div class="config-detail-area">
+
+      <!-- LEFT: clickable list -->
+      <div class="config-detail-left">
+        <div class="list-label">Config Entries</div>
+
+        <button class="config-item-btn is-defined active-item" onclick="showConfig('global', this)">
+          <span class="item-dot dot-defined"></span>Global
+        </button>
+        <button class="config-item-btn is-undefined" onclick="showConfig('sw-food', this)">
+          <span class="item-dot dot-undefined"></span>StoreWall · Food
+        </button>
+        <button class="config-item-btn is-defined" onclick="showConfig('sw-groceries', this)">
+          <span class="item-dot dot-defined"></span>StoreWall · Groceries
+        </button>
+        <button class="config-item-btn is-undefined" onclick="showConfig('sw-retail', this)">
+          <span class="item-dot dot-undefined"></span>StoreWall · Retail
+        </button>
+        <button class="config-item-btn is-defined" onclick="showConfig('search-any', this)">
+          <span class="item-dot dot-defined"></span>Search · Any
+        </button>
+        <button class="config-item-btn is-defined" onclick="showConfig('search-food', this)">
+          <span class="item-dot dot-defined"></span>Search · Food
+        </button>
+        <button class="config-item-btn is-undefined" onclick="showConfig('search-groceries', this)">
+          <span class="item-dot dot-undefined"></span>Search · Groceries
+        </button>
+        <button class="config-item-btn is-undefined" onclick="showConfig('search-retail', this)">
+          <span class="item-dot dot-undefined"></span>Search · Retail
+        </button>
+        <button class="config-item-btn is-undefined" onclick="showConfig('dw-food', this)">
+          <span class="item-dot dot-undefined"></span>DiscoveryWall · Food
+        </button>
+        <button class="config-item-btn is-undefined" onclick="showConfig('dw-groceries', this)">
+          <span class="item-dot dot-undefined"></span>DiscoveryWall · Groceries
+        </button>
+        <button class="config-item-btn is-undefined" onclick="showConfig('dw-retail', this)">
+          <span class="item-dot dot-undefined"></span>DiscoveryWall · Retail
+        </button>
+      </div>
+
+      <!-- RIGHT: detail view -->
+      <div class="config-detail-right" id="config-detail">
+        <!-- populated by JS -->
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SUB-TAB 2: HIERARCHY DIAGRAM -->
+  <div class="sub-panel" id="sub-cfg-diagram">
+
+    <div class="section-header">Resolution hierarchy — how effective config is computed</div>
+
+    <div class="diagram-area">
+
+      <!-- Layer 1: Global -->
+      <div class="diagram-layer">
+        <div class="layer-box layer-global">
+          <div class="layer-left">
+            <div class="layer-name">① Global Default</div>
+            <div class="layer-sublabel">Surface: Any<br>Vertical: Any<br>Segment: Any</div>
+          </div>
+          <div class="layer-controls">
+            <span class="ctrl-pill ctrl-fixed">CardType: Large</span>
+            <span class="ctrl-pill ctrl-config">CoreInfo hierarchy</span>
+            <span class="ctrl-pill ctrl-config">Promotions: ON</span>
+            <span class="ctrl-pill ctrl-config">Highlights hierarchy</span>
+            <span class="ctrl-pill ctrl-config">TrustMarkers hierarchy</span>
+            <span class="ctrl-pill ctrl-config">Features: StorecardImage</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="layer-connector">
+        <div class="connector-line"></div>
+        <div class="connector-label">overrides if defined</div>
+        <div class="connector-line"></div>
+      </div>
+
+      <!-- Layer 2: Surface · Any -->
+      <div class="diagram-layer">
+        <div class="layer-box layer-surface">
+          <div class="layer-left">
+            <div class="layer-name">② Surface · Any</div>
+            <div class="layer-sublabel">e.g. Search · Any<br>Applies to all verticals<br>on that surface</div>
+          </div>
+          <div class="layer-controls">
+            <span class="ctrl-pill ctrl-config">CardType override</span>
+            <span class="ctrl-pill ctrl-config">Module activation</span>
+            <span class="ctrl-pill ctrl-config">Hierarchy overrides</span>
+            <span class="ctrl-pill ctrl-config">Features override</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="layer-connector">
+        <div class="connector-line"></div>
+        <div class="connector-label">overrides if defined</div>
+        <div class="connector-line"></div>
+      </div>
+
+      <!-- Layer 3: Surface · Vertical -->
+      <div class="diagram-layer">
+        <div class="layer-box layer-surface">
+          <div class="layer-left">
+            <div class="layer-name">③ Surface · Vertical</div>
+            <div class="layer-sublabel">e.g. StoreWall · Groceries<br>Most specific permanent<br>config level</div>
+          </div>
+          <div class="layer-controls">
+            <span class="ctrl-pill ctrl-config">Full config replacement</span>
+            <span class="ctrl-pill ctrl-config">Hierarchy overrides</span>
+            <span class="ctrl-pill ctrl-config">Module activation</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="layer-connector">
+        <div class="connector-line"></div>
+        <div class="connector-label">sits on top, temporary</div>
+        <div class="connector-line"></div>
+      </div>
+
+      <!-- Layer 4: Experiment override -->
+      <div class="diagram-layer">
+        <div class="layer-box layer-experiment">
+          <div class="layer-left">
+            <div class="layer-name">④ Experiment Override</div>
+            <div class="layer-sublabel">Scoped · Time-boxed<br>Owner + expiry required<br>Never permanent</div>
+          </div>
+          <div class="layer-controls">
+            <span class="ctrl-pill ctrl-exp">Hierarchy variant A/B</span>
+            <span class="ctrl-pill ctrl-exp">Module ON/OFF toggle</span>
+            <span class="ctrl-pill ctrl-exp">CardType swap</span>
+            <span class="ctrl-pill ctrl-exp">Position override</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="layer-connector">
+        <div class="connector-line"></div>
+        <div class="connector-label">post-processing step</div>
+        <div class="connector-line"></div>
+      </div>
+
+      <!-- Layer 5: Segment signal -->
+      <div class="diagram-layer">
+        <div class="layer-box" style="border-left: 4px solid #7B1FA2;">
+          <div class="layer-left">
+            <div class="layer-name">⑤ Segment Signal</div>
+            <div class="layer-sublabel">Applied at render time<br>promote(element) only<br>Max 1 per module</div>
+          </div>
+          <div class="layer-controls">
+            <span class="ctrl-pill ctrl-seg">promote(element) → #1</span>
+            <span class="ctrl-pill ctrl-seg">newUser / returningUser</span>
+            <span class="ctrl-pill ctrl-seg">Does not replace hierarchy</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="resolution-rule">
+      <div class="rr-title">Resolution rule</div>
+      <span style="color:#7EC8A0">effective_config</span> = Global<br>
+      &nbsp;&nbsp;→ override with Surface·Any &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#555">// if defined</span><br>
+      &nbsp;&nbsp;→ override with Surface·Vertical &nbsp;&nbsp;<span style="color:#555">// if defined</span><br>
+      &nbsp;&nbsp;→ override with Experiment &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#555">// if active, scoped, time-boxed</span><br>
+      &nbsp;&nbsp;→ apply Segment promotion &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#555">// promote(x) → #1, max 1 per module</span><br><br>
+      <span style="color:#555">// Most specific layer wins, field by field — full replacement, never patching</span><br>
+      <span style="color:#555">// Undefined entry = inherit from layer above, no config entry needed</span>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  function switchExp(id, btn) {
+    document.querySelectorAll('.exp-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function switchSub(id, btn) {
+    // scope sub-tab switching to the active exp-panel
+    const activePanel = document.querySelector('.exp-panel.active');
+    activePanel.querySelectorAll('.sub-panel').forEach(p => p.classList.remove('active'));
+    activePanel.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('sub-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // ---- CONFIG DATA ----
+  const CONFIGS = {
+    'global': {
+      name: 'Global',
+      defined: true,
+      inheritsFrom: null,
+      cardType: 'Large',
+      modules: {
+        CoreInfo:     { on: true, hierarchy: ['StoreName','Rating','DeliveryTime','DeliveryFee','Sponsored'], changed: [] },
+        Promotions:   { on: true, hierarchy: ['Promotion'], changed: [] },
+        Highlights:   { on: true, hierarchy: ['Exclusivity','TopRated','New'], changed: [] },
+        TrustMarkers: { on: true, hierarchy: ['FriendsOrders','MostPopular','InStorePricing','FreshnessGuarantee'], changed: [] },
+        Features:     { on: true, hierarchy: ['StorecardImage'], changed: [] },
+      }
+    },
+    'sw-food': {
+      name: 'StoreWall · Food',
+      defined: false,
+      inheritsFrom: 'Global',
+    },
+    'sw-groceries': {
+      name: 'StoreWall · Groceries',
+      defined: true,
+      inheritsFrom: null,
+      cardType: 'Large',
+      modules: {
+        CoreInfo:     { on: true, hierarchy: ['StoreName','Rating','DeliveryTime','DeliveryFee','Sponsored'], changed: [] },
+        Promotions:   { on: true, hierarchy: ['Promotion'], changed: [] },
+        Highlights:   { on: true, hierarchy: ['Exclusivity','TopRated','New'], changed: [] },
+        TrustMarkers: { on: true, hierarchy: ['InStorePricing','FreshnessGuarantee','MostPopular','FriendsOrders'], changed: ['InStorePricing','FreshnessGuarantee','MostPopular','FriendsOrders'] },
+        Features:     { on: true, hierarchy: ['StorecardImage'], changed: [] },
+      }
+    },
+    'sw-retail': {
+      name: 'StoreWall · Retail',
+      defined: false,
+      inheritsFrom: 'Global',
+    },
+    'search-any': {
+      name: 'Search · Any',
+      defined: true,
+      inheritsFrom: null,
+      cardType: 'Medium',
+      modules: {
+        CoreInfo:     { on: true, hierarchy: ['StoreName','Rating','DeliveryTime','DeliveryFee','Sponsored'], changed: [] },
+        Promotions:   { on: true, hierarchy: ['Promotion'], changed: [] },
+        Highlights:   { on: true, hierarchy: ['Exclusivity','TopRated','New'], changed: [] },
+        TrustMarkers: { on: true, hierarchy: ['InStorePricing','MostPopular','FriendsOrders','FreshnessGuarantee'], changed: ['InStorePricing','MostPopular','FriendsOrders','FreshnessGuarantee'] },
+        Features:     { on: true, hierarchy: ['TopSellers'], changed: ['TopSellers'] },
+      }
+    },
+    'search-food': {
+      name: 'Search · Food',
+      defined: true,
+      inheritsFrom: null,
+      cardType: 'Medium',
+      modules: {
+        CoreInfo:     { on: true, hierarchy: ['StoreName','Rating','DeliveryTime','DeliveryFee','Sponsored'], changed: [] },
+        Promotions:   { on: true, hierarchy: ['Promotion'], changed: [] },
+        Highlights:   { on: true, hierarchy: ['Exclusivity','TopRated','New'], changed: [] },
+        TrustMarkers: { on: true, hierarchy: ['MostPopular','FriendsOrders','InStorePricing','FreshnessGuarantee'], changed: ['MostPopular','FriendsOrders','InStorePricing','FreshnessGuarantee'] },
+        Features:     { on: true, hierarchy: ['TopSellers'], changed: ['TopSellers'] },
+      }
+    },
+    'search-groceries': {
+      name: 'Search · Groceries',
+      defined: false,
+      inheritsFrom: 'Search · Any',
+    },
+    'search-retail': {
+      name: 'Search · Retail',
+      defined: false,
+      inheritsFrom: 'Search · Any',
+    },
+    'dw-food': {
+      name: 'DiscoveryWall · Food',
+      defined: false,
+      inheritsFrom: 'StoreWall · Food → Global',
+    },
+    'dw-groceries': {
+      name: 'DiscoveryWall · Groceries',
+      defined: false,
+      inheritsFrom: 'StoreWall · Groceries',
+    },
+    'dw-retail': {
+      name: 'DiscoveryWall · Retail',
+      defined: false,
+      inheritsFrom: 'StoreWall · Retail → Global',
+    },
+  };
+
+  function showConfig(id, btn) {
+    // update active button
+    document.querySelectorAll('.config-item-btn').forEach(b => b.classList.remove('active-item'));
+    btn.classList.add('active-item');
+
+    const cfg = CONFIGS[id];
+    const el = document.getElementById('config-detail');
+
+    if (!cfg.defined) {
+      el.innerHTML = `
+        <div class="detail-header">
+          <div class="detail-title">${cfg.name}</div>
+          <span class="detail-badge badge-inherits">undefined</span>
+        </div>
+        <div class="detail-inherits-from">→ inherits from: <strong>${cfg.inheritsFrom}</strong></div>
+        <div class="divider-line"></div>
+        <div style="font-size:12px; color:var(--text-muted); line-height:1.6;">
+          No config entry needed. This context resolves to the parent config above.<br><br>
+          To create a custom config for this context, define an explicit entry — it will override the parent for all modules specified.
+        </div>`;
+      return;
+    }
+
+    const ranks = ['1st','2nd','3rd','4th','5th'];
+    let modulesHTML = '';
+    for (const [modName, mod] of Object.entries(cfg.modules)) {
+      const isChanged = mod.changed.length > 0;
+      modulesHTML += `
+        <div class="detail-module">
+          <div class="module-header ${isChanged ? 'module-changed' : ''}">
+            ${modName}
+            <span class="module-status ${mod.on ? 'status-on' : 'status-off'}">${mod.on ? 'ON' : 'OFF'}</span>
+            ${isChanged ? '<span style="font-size:10px;font-weight:400;color:#1565C0;margin-left:4px;">↑ differs from Global</span>' : ''}
+          </div>
+          <div class="hierarchy-list">
+            ${mod.hierarchy.map((el, i) => `
+              <div class="h-item ${mod.changed.includes(el) ? 'changed' : ''}">
+                <span class="h-rank">${ranks[i] || (i+1)+'th'}</span>
+                <span class="h-name">${el}</span>
+              </div>`).join('')}
+          </div>
+        </div>
+        <div class="divider-line"></div>`;
+    }
+
+    el.innerHTML = `
+      <div class="detail-header">
+        <div class="detail-title">${cfg.name}</div>
+        <span class="detail-badge badge-defined">defined</span>
+        <span style="font-family:'DM Mono',monospace;font-size:11px;color:#888;">CardType: ${cfg.cardType}</span>
+      </div>
+      <div class="divider-line"></div>
+      ${modulesHTML}`;
+  }
+
+  // init detail view on load
+  window.addEventListener('DOMContentLoaded', () => {
+    const firstBtn = document.querySelector('.config-item-btn');
+    if (firstBtn) showConfig('global', firstBtn);
+  });
+</script>
+
+</body>
+</html>
