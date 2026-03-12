@@ -645,11 +645,12 @@
 <!-- TOP NAV -->
 <nav class="top-nav">
   <div class="nav-logo">StoreCard Experiments</div>
+  <button class="nav-btn" onclick="switchExp('docs', this)">📎 Documentation</button>
   <button class="nav-btn" onclick="switchExp('anatomy', this)">🫀 StoreCard Anatomy</button>
+  <button class="nav-btn" onclick="switchExp('config', this)">⚙ Configuration</button>
   <button class="nav-btn active" onclick="switchExp('exp1', this)">Experiment 1 — Promotions Position</button>
   <button class="nav-btn" onclick="switchExp('exp2', this)">Experiment 2 — InStorePricing Lift</button>
   <button class="nav-btn" onclick="switchExp('exp3', this)">Experiment 3 — Small CardType</button>
-  <button class="nav-btn" onclick="switchExp('config', this)">⚙ Configuration</button>
 </nav>
 
 <!-- ============================================================
@@ -1223,6 +1224,77 @@
     <span class="dim">&nbsp;&nbsp;Features     : </span><span class="grn">OFF</span><br><br>
     <span class="dim">// ⚠ Note: experiment conflates card size reduction with information density reduction.</span><br>
     <span class="dim">// If variant wins, follow-up experiment needed to decompose the two effects.</span>
+  </div>
+
+</div>
+
+<!-- ============================================================
+     DOCUMENTATION
+============================================================ -->
+<div class="exp-panel" id="docs">
+
+  <div class="page-header">
+    <div class="mono-label">Documentation</div>
+    <h1>Reference Documents</h1>
+    <p>Core documents for the StoreCards Redesign 2026 initiative.</p>
+  </div>
+
+  <div style="display:flex; gap:20px; flex-wrap:wrap; justify-content:center; width:100%; max-width:780px;">
+
+    <!-- PID -->
+    <a href="https://docs.google.com/document/d/1UuzUXGbsdMPcVtAVcVajCl760buP9XetkN6oanhd1pg" target="_blank" style="text-decoration:none;">
+      <div style="
+        background:#fff; border-radius:14px; padding:28px 32px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
+        display:flex; flex-direction:column; align-items:center; gap:14px;
+        width:220px; cursor:pointer; transition: box-shadow 0.15s, transform 0.15s;
+      "
+      onmouseover="this.style.boxShadow='0 8px 24px rgba(0,0,0,0.13), 0 0 0 1px rgba(0,0,0,0.06)'; this.style.transform='translateY(-2px)'"
+      onmouseout="this.style.boxShadow='0 2px 12px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04)'; this.style.transform='translateY(0)'">
+        <!-- Google Docs icon -->
+        <svg width="52" height="64" viewBox="0 0 52 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 0h28l18 18v40a6 6 0 01-6 6H6a6 6 0 01-6-6V6a6 6 0 016-6z" fill="#4285F4"/>
+          <path d="M34 0l18 18H40a6 6 0 01-6-6V0z" fill="#A8C7FA"/>
+          <rect x="12" y="28" width="28" height="3" rx="1.5" fill="white" opacity="0.9"/>
+          <rect x="12" y="35" width="28" height="3" rx="1.5" fill="white" opacity="0.9"/>
+          <rect x="12" y="42" width="20" height="3" rx="1.5" fill="white" opacity="0.9"/>
+        </svg>
+        <div style="text-align:center;">
+          <div style="font-size:15px; font-weight:700; color:#1a1a1a; margin-bottom:4px;">PID</div>
+          <div style="font-family:'DM Mono',monospace; font-size:10px; color:#888; text-transform:uppercase; letter-spacing:0.08em;">Google Doc</div>
+          <div style="font-size:11px; color:#aaa; margin-top:6px; line-height:1.4;">StoreCards Redesign<br>2026 · Food, Qcomm</div>
+        </div>
+      </div>
+    </a>
+
+    <!-- Sheets -->
+    <a href="https://docs.google.com/spreadsheets/d/1VCz6yrYVW0be-ZKOMCM2915kcP-SKv4vrQMuNHlVQbs" target="_blank" style="text-decoration:none;">
+      <div style="
+        background:#fff; border-radius:14px; padding:28px 32px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04);
+        display:flex; flex-direction:column; align-items:center; gap:14px;
+        width:220px; cursor:pointer; transition: box-shadow 0.15s, transform 0.15s;
+      "
+      onmouseover="this.style.boxShadow='0 8px 24px rgba(0,0,0,0.13), 0 0 0 1px rgba(0,0,0,0.06)'; this.style.transform='translateY(-2px)'"
+      onmouseout="this.style.boxShadow='0 2px 12px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04)'; this.style.transform='translateY(0)'">
+        <!-- Google Sheets icon -->
+        <svg width="52" height="64" viewBox="0 0 52 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 0h28l18 18v40a6 6 0 01-6 6H6a6 6 0 01-6-6V6a6 6 0 016-6z" fill="#0F9D58"/>
+          <path d="M34 0l18 18H40a6 6 0 01-6-6V0z" fill="#87D3B0"/>
+          <rect x="11" y="26" width="30" height="18" rx="2" fill="white" opacity="0.15"/>
+          <line x1="11" y1="33" x2="41" y2="33" stroke="white" stroke-width="1.5" opacity="0.6"/>
+          <line x1="11" y1="39" x2="41" y2="39" stroke="white" stroke-width="1.5" opacity="0.6"/>
+          <line x1="24" y1="26" x2="24" y2="44" stroke="white" stroke-width="1.5" opacity="0.6"/>
+          <rect x="11" y="26" width="30" height="18" rx="2" stroke="white" stroke-width="1.5" opacity="0.5" fill="none"/>
+        </svg>
+        <div style="text-align:center;">
+          <div style="font-size:15px; font-weight:700; color:#1a1a1a; margin-bottom:4px;">Hierarchies</div>
+          <div style="font-family:'DM Mono',monospace; font-size:10px; color:#888; text-transform:uppercase; letter-spacing:0.08em;">Google Sheets</div>
+          <div style="font-size:11px; color:#aaa; margin-top:6px; line-height:1.4;">StoreCard Info Layer<br>Element Hierarchy</div>
+        </div>
+      </div>
+    </a>
+
   </div>
 
 </div>
