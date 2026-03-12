@@ -25,64 +25,90 @@
     --grey-text: #555;
   }
 
+  /* =====================
+     LEFT NAV SIDEBAR
+  ===================== */
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--bg);
     min-height: 100vh;
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
+    align-items: stretch;
     padding: 0;
+    margin: 0;
   }
 
-  /* =====================
-     TOP NAV (experiment selector)
-  ===================== */
-  .top-nav {
-    width: 100%;
+  .left-nav {
+    width: 220px;
+    flex-shrink: 0;
     background: #fff;
-    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
     display: flex;
-    align-items: center;
-    padding: 0 40px;
-    gap: 0;
+    flex-direction: column;
+    padding: 28px 0 24px;
     position: sticky;
     top: 0;
+    height: 100vh;
+    overflow-y: auto;
     z-index: 100;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
   }
 
   .nav-logo {
     font-family: 'DM Mono', monospace;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 500;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--text-muted);
-    margin-right: 32px;
-    padding: 18px 0;
-    white-space: nowrap;
+    padding: 0 20px 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 8px;
   }
 
   .nav-btn {
     font-family: 'DM Sans', sans-serif;
     font-size: 13px;
     font-weight: 500;
-    padding: 18px 20px;
+    padding: 10px 20px;
     border: none;
     background: none;
     cursor: pointer;
     color: var(--text-muted);
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
-    transition: color 0.15s, border-color 0.15s;
+    text-align: left;
+    border-left: 3px solid transparent;
+    transition: color 0.15s, background 0.15s, border-color 0.15s;
     white-space: nowrap;
+    width: 100%;
   }
   .nav-btn.active {
     color: var(--text);
-    border-bottom-color: var(--text);
+    background: #F5F8FF;
+    border-left-color: var(--text);
+    font-weight: 600;
   }
-  .nav-btn:hover:not(.active) { color: #555; }
+  .nav-btn:hover:not(.active) { color: #555; background: #FAFAFA; }
+
+  .nav-section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #bbb;
+    padding: 16px 20px 4px;
+  }
+
+  /* =====================
+     MAIN CONTENT AREA
+  ===================== */
+  .main-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+  }
 
   /* =====================
      EXPERIMENT PANELS
@@ -92,7 +118,7 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
-    padding: 48px 24px;
+    padding: 48px 40px;
     gap: 36px;
   }
   .exp-panel.active { display: flex; }
@@ -758,17 +784,24 @@
 </head>
 <body>
 
-<!-- TOP NAV -->
-<nav class="top-nav">
-  <div class="nav-logo">StoreCard Experiments</div>
+<!-- LEFT NAV -->
+<nav class="left-nav">
+  <div class="nav-logo">StoreCard<br>Experiments</div>
+
+  <div class="nav-section-label">Overview</div>
   <button class="nav-btn active" onclick="switchExp('docs', this)">📎 Documentation</button>
   <button class="nav-btn" onclick="switchExp('anatomy', this)">🫀 StoreCard Anatomy</button>
   <button class="nav-btn" onclick="switchExp('config', this)">⚙ Configuration</button>
-  <button class="nav-btn" onclick="switchExp('exp1', this)">Experiment 1 — Promotions Position</button>
-  <button class="nav-btn" onclick="switchExp('exp2', this)">Experiment 2 — InStorePricing Lift</button>
-  <button class="nav-btn" onclick="switchExp('exp3', this)">Experiment 3 — Small CardType</button>
-  <button class="nav-btn" onclick="switchExp('simulator', this)">▶ StoreCard Simulator</button>
+  <button class="nav-btn" onclick="switchExp('simulator', this)">▶ Simulator</button>
+
+  <div class="nav-section-label">Experiments</div>
+  <button class="nav-btn" onclick="switchExp('exp1', this)">Exp 1 — Promos Position</button>
+  <button class="nav-btn" onclick="switchExp('exp2', this)">Exp 2 — InStorePricing</button>
+  <button class="nav-btn" onclick="switchExp('exp3', this)">Exp 3 — Small CardType</button>
 </nav>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
 
 <!-- ============================================================
      STORECARD ANATOMY
@@ -1678,6 +1711,8 @@
 
 </div>
 
+</div><!-- /main-content -->
+
 <!-- SIDEBAR OVERLAY -->
 <div class="sim-sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 <div class="sim-sidebar" id="sim-sidebar">
@@ -1973,10 +2008,16 @@
     FreshnessGuarantee: { cls: 'blue',   label: '🌿 Freshness Guarantee', dot: false },
   };
 
-  function tagHTML(elementName) {
+  function tagHTML(elementName, module, cardId) {
     const t = TAG_STYLES[elementName] || { cls: 'grey', label: elementName, dot: false };
     const dotHTML = t.dot ? `<div class="dot"></div>` : '';
-    return `<div class="tag ${t.cls}" style="cursor:pointer" onclick="event.stopPropagation()">${dotHTML}${t.label}</div>`;
+    const clickable = module && cardId;
+    const style = clickable
+      ? `cursor:pointer; outline: 1.5px dashed rgba(0,0,0,0.18); outline-offset:2px;`
+      : '';
+    const onclick = clickable
+      ? `onclick="openSidebar('${module}','${cardId}')"` : '';
+    return `<div class="tag ${t.cls}" style="${style}" ${onclick}>${dotHTML}${t.label}${clickable ? ' <span style="font-size:9px;opacity:0.5;margin-left:2px;">▾</span>' : ''}</div>`;
   }
 
   // Build a storecard HTML given config + store data + module click handlers
@@ -1986,13 +2027,9 @@
     const promoBelow = cfg.promotionsPosition === 'below';
 
     if (cfg.cardType === 'large') {
-      const slot1 = hlEl  ? tagHTML(hlEl)  : '';
-      const slot2 = tmEl  ? tagHTML(tmEl)  : '';
-      const promoOverlay = !promoBelow && cfg.promotions.on ? `
-        <div class="overlay-single" style="bottom:10px;top:auto;left:auto;right:10px;">
-          <div class="tag orange"><div class="dot"></div>−20% Prime</div>
-        </div>` : '';
-      const promoBelowHTML = (promoBelow || (!promoBelow)) && cfg.promotions.on ? `
+      const slot1 = hlEl ? tagHTML(hlEl, 'highlights',   cardId) : '';
+      const slot2 = tmEl ? tagHTML(tmEl, 'trustmarkers', cardId) : '';
+      const promoBelowHTML = cfg.promotions.on ? `
         <div class="card-promotions">
           <div class="tag orange"><div class="dot"></div>−20% Prime</div>
         </div>` : '';
@@ -2004,10 +2041,9 @@
             <div class="food-emoji">${store.emoji}</div>
             <div class="fav-btn">♡</div>
             <div class="overlay-slots">
-              <span onclick="openSidebar('highlights','${cardId}')" style="cursor:pointer">${slot1}</span>
-              <span onclick="openSidebar('trustmarkers','${cardId}')" style="cursor:pointer">${slot2}</span>
+              ${slot1}
+              ${slot2}
             </div>
-            ${promoOverlay}
           </div>
           <div class="card-core">
             <div class="store-name">${store.name}</div>
@@ -2023,9 +2059,9 @@
     }
 
     if (cfg.cardType === 'medium') {
-      const slotEl = cfg.highlights.on ? hlEl : (cfg.trustMarkers.on ? tmEl : null);
+      const slotEl     = cfg.highlights.on ? hlEl : (cfg.trustMarkers.on ? tmEl : null);
       const slotModule = cfg.highlights.on ? 'highlights' : 'trustmarkers';
-      const slotTag = slotEl ? `<span onclick="openSidebar('${slotModule}','${cardId}')" style="cursor:pointer">${tagHTML(slotEl)}</span>` : '';
+      const slotTag    = slotEl ? tagHTML(slotEl, slotModule, cardId) : '';
       return `
         <div class="storecard-medium sim-card" id="${cardId}">
           <div class="card-top">
@@ -2057,9 +2093,9 @@
     }
 
     if (cfg.cardType === 'small') {
-      const slotEl = cfg.trustMarkers.on ? tmEl : (cfg.highlights.on ? hlEl : null);
+      const slotEl     = cfg.trustMarkers.on ? tmEl : (cfg.highlights.on ? hlEl : null);
       const slotModule = cfg.trustMarkers.on ? 'trustmarkers' : 'highlights';
-      const slotTag = slotEl ? `<span onclick="openSidebar('${slotModule}','${cardId}')" style="cursor:pointer">${tagHTML(slotEl)}</span>` : '';
+      const slotTag    = slotEl ? tagHTML(slotEl, slotModule, cardId) : '';
       return `
         <div class="storecard-small sim-card" id="${cardId}">
           <div class="card-top">
