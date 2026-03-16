@@ -480,6 +480,23 @@
     padding: 2px 7px; border-radius: 4px; background: #F5F5F5; color: #555;
   }
 
+  /* block skeleton labels */
+  .skel-block {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 9px; border-radius: 6px; white-space: nowrap;
+  }
+  .block-letter {
+    font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 700;
+  }
+  .block-type {
+    font-family: 'DM Mono', monospace; font-size: 9px; text-transform: uppercase;
+    letter-spacing: 0.06em; opacity: 0.8;
+  }
+  .block-legend-item {
+    background: #fff; border-radius: 10px; padding: 12px 14px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05), 0 0 0 1px rgba(0,0,0,0.04);
+  }
+
   /* =====================
      SIMULATOR STYLES
   ===================== */
@@ -810,11 +827,11 @@
 
   <div class="page-header">
     <div class="mono-label">StoreCard Anatomy</div>
-    <h1>Modules, Elements & Context Dimensions</h1>
-    <p>A StoreCard is a UI component made of independent modules. Each module contains elements rendered in a configurable priority order. The right config is selected based on two context dimensions.</p>
+    <h1>Card Types & Block Structure</h1>
+    <p>StoreCards come in three sizes. Each defines a fixed set of generic <strong>blocks</strong> — containers with a position and a type. The backend assigns modules to blocks at render time based on context configuration.</p>
   </div>
 
-  <!-- DEFINITIONS -->
+  <!-- DEFINITIONS ROW -->
   <div class="definitions">
     <div class="def-card">
       <div class="def-label" style="color:#1565C0">Dimension 1</div>
@@ -837,139 +854,263 @@
       </div>
     </div>
     <div class="def-card">
-      <div class="def-label" style="color:#2E7D32">Config unit</div>
-      <div class="def-title">Module</div>
-      <div class="def-desc">A group of semantically related UI elements inside a StoreCard. Each module has a dedicated space and an internal priority hierarchy.</div>
+      <div class="def-label" style="color:#2E7D32">Layout unit</div>
+      <div class="def-title">Block</div>
+      <div class="def-desc">A named, typed container at a fixed position inside the card. The block defines <em>where</em> and <em>what kind</em> of content can appear — not what the content is.</div>
     </div>
     <div class="def-card">
-      <div class="def-label" style="color:#E65100">Config unit</div>
-      <div class="def-title">Element</div>
-      <div class="def-desc">A single piece of information inside a module. The highest-priority available element in the hierarchy is the one rendered.</div>
+      <div class="def-label" style="color:#E65100">Content unit</div>
+      <div class="def-title">Module</div>
+      <div class="def-desc">A backend-resolved content unit (Highlights, TrustMarkers, Promotions…) assigned to a block by the config. The module brings its own hierarchy logic.</div>
     </div>
   </div>
 
-  <!-- ANNOTATED STORECARD -->
-  <div class="annotation-layout">
+  <!-- CARD SKELETONS -->
+  <div class="section-header" style="max-width:860px;">Card type skeletons — generic block structure</div>
 
-    <!-- LEFT -->
-    <div class="annotations-left">
-      <div class="ann" style="margin-top:20px;">
-        <div class="ann-line">
-          <span class="ann-badge badge-highlight">Highlights</span>
-          <div class="ann-desc">One tag showing store's key differentiator. Hierarchy: Exclusivity → TopRated → New</div>
+  <div style="display:flex; gap:32px; align-items:flex-start; justify-content:center; flex-wrap:wrap; width:100%; max-width:860px;">
+
+    <!-- LARGE -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:10px;">
+      <div style="font-family:'DM Mono',monospace; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; color:var(--text);">Large</div>
+      <div style="width:240px; border-radius:16px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.05); background:#fff;">
+
+        <!-- Image area -->
+        <div style="position:relative; width:100%; height:148px; background:#F0F0F0; border-radius:0;">
+
+          <!-- Block A + B stacked top-left -->
+          <div style="position:absolute; top:10px; left:10px; display:flex; flex-direction:column; gap:5px; z-index:2;">
+            <div class="skel-block" style="background:rgba(99,102,241,0.12); border:1.5px dashed #6366F1; color:#6366F1;">
+              <span class="block-letter">A</span>
+              <span class="block-type">tag</span>
+            </div>
+            <div class="skel-block" style="background:rgba(236,72,153,0.10); border:1.5px dashed #EC4899; color:#EC4899;">
+              <span class="block-letter">B</span>
+              <span class="block-type">tag</span>
+            </div>
+          </div>
+
+          <!-- Block C bottom-left -->
+          <div style="position:absolute; bottom:10px; left:10px; z-index:2;">
+            <div class="skel-block" style="background:rgba(16,185,129,0.10); border:1.5px dashed #10B981; color:#10B981; min-width:90px;">
+              <span class="block-letter">C</span>
+              <span class="block-type">label</span>
+            </div>
+          </div>
+
+          <!-- Block D bottom-right -->
+          <div style="position:absolute; bottom:10px; right:10px; z-index:2;">
+            <div class="skel-block" style="background:rgba(245,158,11,0.10); border:1.5px dashed #F59E0B; color:#F59E0B;">
+              <span class="block-letter">D</span>
+              <span class="block-type">pagination</span>
+            </div>
+          </div>
+
+          <!-- image label -->
+          <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;">
+            <span style="font-family:'DM Mono',monospace; font-size:10px; color:#C0C0C0; text-transform:uppercase; letter-spacing:0.1em;">Store Image</span>
+          </div>
         </div>
-        <div class="ann-connector m-highlight"><div class="ann-dash"></div><div class="ann-dot"></div></div>
-      </div>
-      <div class="ann" style="margin-top:8px;">
-        <div class="ann-line">
-          <span class="ann-badge badge-trust">Trust Markers</span>
-          <div class="ann-desc">Social or quality signal. Hierarchy: FriendsOrders → MostPopular → InStorePricing</div>
+
+        <!-- Core Info -->
+        <div style="padding:10px 12px 8px; border-bottom:1px solid #F0F0F0; background:#FAFAFA;">
+          <div style="font-family:'DM Mono',monospace; font-size:9px; color:#bbb; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:5px;">Core Info — always on</div>
+          <div style="height:10px; background:#E8E8E8; border-radius:5px; width:55%; margin-bottom:5px;"></div>
+          <div style="display:flex; gap:8px;">
+            <div style="height:8px; background:#EFEFEF; border-radius:4px; width:30%;"></div>
+            <div style="height:8px; background:#EFEFEF; border-radius:4px; width:25%;"></div>
+            <div style="height:8px; background:#EFEFEF; border-radius:4px; width:20%;"></div>
+          </div>
         </div>
-        <div class="ann-connector m-trust"><div class="ann-dash"></div><div class="ann-dot"></div></div>
-      </div>
-      <div class="ann" style="margin-top:52px;">
-        <div class="ann-line">
-          <span class="ann-badge badge-core">Core Info</span>
-          <div class="ann-desc">Always-on module. StoreName · Rating · ETA · DeliveryFee · Sponsored</div>
+
+        <!-- Block E -->
+        <div style="padding:8px 12px;">
+          <div class="skel-block" style="background:rgba(239,68,68,0.08); border:1.5px dashed #EF4444; color:#EF4444; width:fit-content;">
+            <span class="block-letter">E</span>
+            <span class="block-type">tag</span>
+          </div>
         </div>
-        <div class="ann-connector m-core"><div class="ann-dash"></div><div class="ann-dot"></div></div>
-      </div>
-      <div class="ann" style="margin-top:8px;">
-        <div class="ann-line">
-          <span class="ann-badge badge-promo">Promotions</span>
-          <div class="ann-desc">Active discount or offer. Position is configurable (overlay or dedicated row).</div>
-        </div>
-        <div class="ann-connector m-promo"><div class="ann-dash"></div><div class="ann-dot"></div></div>
+
       </div>
     </div>
 
-    <!-- STORECARD MOCK -->
-    <div class="storecard-large">
-      <div class="card-image">
-        <div class="img-overlay"></div>
-        <div class="food-emoji">🍕</div>
-        <div class="fav-btn">♡</div>
-        <div class="overlay-slots">
-          <div class="tag glovo"><div class="dot"></div>Only on Glovo</div>
-          <div class="tag pink">Ordered by friends</div>
+    <!-- MEDIUM -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:10px;">
+      <div style="font-family:'DM Mono',monospace; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; color:var(--text);">Medium</div>
+      <div style="width:260px; border-radius:16px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.05); background:#fff;">
+
+        <!-- Top row: logo + info -->
+        <div style="display:flex; gap:10px; padding:12px; align-items:stretch;">
+          <!-- Logo placeholder -->
+          <div style="width:60px; height:60px; border-radius:10px; background:#F0F0F0; border:1px solid #E8E8E8; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <span style="font-family:'DM Mono',monospace; font-size:9px; color:#C0C0C0;">logo</span>
+          </div>
+          <!-- Right col -->
+          <div style="flex:1; display:flex; flex-direction:column; justify-content:space-between; gap:6px;">
+            <!-- Slot A -->
+            <div class="skel-block" style="background:rgba(99,102,241,0.12); border:1.5px dashed #6366F1; color:#6366F1; width:fit-content;">
+              <span class="block-letter">A</span>
+              <span class="block-type">tag / label</span>
+            </div>
+            <!-- Core info placeholder -->
+            <div>
+              <div style="height:9px; background:#E8E8E8; border-radius:4px; width:65%; margin-bottom:5px;"></div>
+              <div style="display:flex; gap:6px;">
+                <div style="height:7px; background:#EFEFEF; border-radius:3px; width:28%;"></div>
+                <div style="height:7px; background:#EFEFEF; border-radius:3px; width:22%;"></div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="card-core">
-        <div class="store-name">Honest Greens</div>
-        <div class="core-meta">
-          <span class="rating"><span class="star">★</span> 4.8</span>
-          <span class="sep">·</span><span>20–30 min</span>
-          <span class="sep">·</span><span>€2.49</span>
-          <span class="sep">·</span><span class="sponsored">Sponsored</span>
+
+        <!-- Slot B: images -->
+        <div style="padding:0 12px 12px;">
+          <div style="border-radius:10px; background:#F5F5F5; border:1.5px dashed #10B981; padding:10px; display:flex; align-items:center; gap:8px;">
+            <div style="display:flex; flex-direction:column; gap:2px; flex-shrink:0;">
+              <span style="font-family:'DM Mono',monospace; font-size:11px; font-weight:700; color:#10B981;">B</span>
+              <span style="font-family:'DM Mono',monospace; font-size:8px; color:#10B981; white-space:nowrap;">images</span>
+            </div>
+            <div style="display:flex; gap:6px; overflow:hidden;">
+              <div style="width:52px; height:52px; border-radius:8px; background:#E8E8E8; flex-shrink:0;"></div>
+              <div style="width:52px; height:52px; border-radius:8px; background:#E8E8E8; flex-shrink:0;"></div>
+              <div style="width:52px; height:52px; border-radius:8px; background:#E8E8E8; flex-shrink:0;"></div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="card-promotions">
-        <div class="tag orange"><div class="dot"></div>−20% Prime</div>
+
       </div>
     </div>
 
-    <!-- RIGHT -->
-    <div class="annotations-right">
-      <div class="ann right" style="margin-top:110px;">
-        <div class="ann-line">
-          <span class="ann-badge badge-feature">Features</span>
-          <div class="ann-desc" style="text-align:left">Store image, product carousel (TopSellers), or empty. Depends on card type (Large / Medium / Small).</div>
+    <!-- SMALL -->
+    <div style="display:flex; flex-direction:column; align-items:center; gap:10px;">
+      <div style="font-family:'DM Mono',monospace; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; color:var(--text);">Small</div>
+      <div style="width:260px; border-radius:16px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.05); background:#fff;">
+
+        <!-- Top row only — same as Medium but no Slot B -->
+        <div style="display:flex; gap:10px; padding:12px; align-items:stretch;">
+          <div style="width:60px; height:60px; border-radius:10px; background:#F0F0F0; border:1px solid #E8E8E8; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <span style="font-family:'DM Mono',monospace; font-size:9px; color:#C0C0C0;">logo</span>
+          </div>
+          <div style="flex:1; display:flex; flex-direction:column; justify-content:space-between; gap:6px;">
+            <div class="skel-block" style="background:rgba(99,102,241,0.12); border:1.5px dashed #6366F1; color:#6366F1; width:fit-content;">
+              <span class="block-letter">A</span>
+              <span class="block-type">tag / label</span>
+            </div>
+            <div>
+              <div style="height:9px; background:#E8E8E8; border-radius:4px; width:65%; margin-bottom:5px;"></div>
+              <div style="display:flex; gap:6px;">
+                <div style="height:7px; background:#EFEFEF; border-radius:3px; width:28%;"></div>
+                <div style="height:7px; background:#EFEFEF; border-radius:3px; width:22%;"></div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="ann-connector m-feature"><div class="ann-dot"></div><div class="ann-dash"></div></div>
+
+        <!-- No Slot B indicator -->
+        <div style="padding:0 12px 12px;">
+          <div style="border-radius:8px; background:#FAFAFA; border:1px dashed #E0E0E0; padding:8px 12px; text-align:center;">
+            <span style="font-family:'DM Mono',monospace; font-size:9px; color:#C8C8C8; text-transform:uppercase; letter-spacing:0.1em;">no slot B</span>
+          </div>
+        </div>
+
       </div>
+    </div>
+
+  </div>
+
+  <!-- BLOCK LEGEND -->
+  <div class="section-header" style="max-width:860px;">Block reference</div>
+
+  <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:10px; width:100%; max-width:860px;">
+
+    <div class="block-legend-item" style="border-left:3px solid #6366F1;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+        <span class="block-letter" style="color:#6366F1; font-size:14px;">A</span>
+        <span style="font-size:12px; font-weight:700; color:var(--text);">Tag — top-left overlay / info-row</span>
+      </div>
+      <div style="font-size:11px; color:var(--text-muted); line-height:1.5;">Primary tag slot. On Large: image overlay top-left. On Medium/Small: info-row above store name. Accepts: Highlights, TrustMarkers.</div>
+    </div>
+
+    <div class="block-legend-item" style="border-left:3px solid #EC4899;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+        <span class="block-letter" style="color:#EC4899; font-size:14px;">B</span>
+        <span style="font-size:12px; font-weight:700; color:var(--text);">Tag — image overlay stacked</span>
+      </div>
+      <div style="font-size:11px; color:var(--text-muted); line-height:1.5;">Large only. Secondary tag stacked below A on the image. Accepts: TrustMarkers, Highlights.</div>
+    </div>
+
+    <div class="block-legend-item" style="border-left:3px solid #10B981;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+        <span class="block-letter" style="color:#10B981; font-size:14px;">C</span>
+        <span style="font-size:12px; font-weight:700; color:var(--text);">Label — image bottom-left</span>
+      </div>
+      <div style="font-size:11px; color:var(--text-muted); line-height:1.5;">Large only. Label overlaid bottom-left of the image. Accepts: store category, distance, or custom label.</div>
+    </div>
+
+    <div class="block-legend-item" style="border-left:3px solid #F59E0B;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+        <span class="block-letter" style="color:#F59E0B; font-size:14px;">D</span>
+        <span style="font-size:12px; font-weight:700; color:var(--text);">Pagination — image bottom-right</span>
+      </div>
+      <div style="font-size:11px; color:var(--text-muted); line-height:1.5;">Large only. Dot pagination indicator for image carousels. Shown when store has multiple images.</div>
+    </div>
+
+    <div class="block-legend-item" style="border-left:3px solid #EF4444;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+        <span class="block-letter" style="color:#EF4444; font-size:14px;">E</span>
+        <span style="font-size:12px; font-weight:700; color:var(--text);">Tag — below Core Info</span>
+      </div>
+      <div style="font-size:11px; color:var(--text-muted); line-height:1.5;">Large only. Dedicated row below Core Info. Accepts: Promotions, TrustMarkers. Exp 1 tests moving Promotions here.</div>
+    </div>
+
+    <div class="block-legend-item" style="border-left:3px solid #10B981;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+        <span class="block-letter" style="color:#10B981; font-size:14px;">B <span style="font-size:10px; font-weight:400;">(Med)</span></span>
+        <span style="font-size:12px; font-weight:700; color:var(--text);">Images — below top row</span>
+      </div>
+      <div style="font-size:11px; color:var(--text-muted); line-height:1.5;">Medium only. Horizontal image strip below the logo+info row. Accepts: TopSellers carousel or StorecardImage. Absent in Small.</div>
     </div>
 
   </div>
 
   <!-- MODULE LEGEND -->
-  <div class="anatomy-legend">
-    <div class="legend-title">Module reference — elements & hierarchy logic</div>
-    <div class="legend-row">
-      <div class="legend-badge"><span class="ann-badge badge-core">Core Info</span></div>
-      <div>
-        <div class="legend-name">Core Info</div>
-        <div class="legend-desc">Always ON. Fixed elements, always fully rendered. No fallback needed.</div>
-        <div class="legend-elements">
-          <span class="el-pill">StoreName</span><span class="el-pill">Rating</span><span class="el-pill">DeliveryTime</span><span class="el-pill">DeliveryFee</span><span class="el-pill">Sponsored</span>
-        </div>
-      </div>
-    </div>
-    <div class="legend-row">
-      <div class="legend-badge"><span class="ann-badge badge-promo">Promotions</span></div>
-      <div>
-        <div class="legend-name">Promotions</div>
-        <div class="legend-desc">ON/OFF. Single element — renders if a promotion is available for the store, hidden otherwise.</div>
-        <div class="legend-elements"><span class="el-pill">Promotion</span></div>
-      </div>
-    </div>
+  <div class="section-header" style="max-width:860px;">Module → Block assignment (current config)</div>
+
+  <div class="anatomy-legend" style="max-width:860px;">
+    <div class="legend-title">How modules map to blocks by card type</div>
     <div class="legend-row">
       <div class="legend-badge"><span class="ann-badge badge-highlight">Highlights</span></div>
       <div>
         <div class="legend-name">Highlights</div>
-        <div class="legend-desc">ON/OFF. Shows the first available element in the hierarchy. If none available, module is hidden.</div>
-        <div class="legend-elements">
-          <span class="el-pill">Exclusivity</span><span class="el-pill">TopRated</span><span class="el-pill">New</span>
-        </div>
+        <div class="legend-desc">Large → Block A &nbsp;·&nbsp; Medium/Small → Block A &nbsp;·&nbsp; Elements: Exclusivity, TopRated, New</div>
       </div>
     </div>
     <div class="legend-row">
       <div class="legend-badge"><span class="ann-badge badge-trust">Trust Markers</span></div>
       <div>
         <div class="legend-name">Trust Markers</div>
-        <div class="legend-desc">ON/OFF. Shows the first available element in the hierarchy. Order is the key experimentation lever.</div>
-        <div class="legend-elements">
-          <span class="el-pill">FriendsOrders</span><span class="el-pill">MostPopular</span><span class="el-pill">InStorePricing</span><span class="el-pill">FreshnessGuarantee</span>
-        </div>
+        <div class="legend-desc">Large → Block B &nbsp;·&nbsp; Medium/Small → Block A (when Highlights OFF) &nbsp;·&nbsp; Elements: FriendsOrders, MostPopular, InStorePricing, FreshnessGuarantee</div>
+      </div>
+    </div>
+    <div class="legend-row">
+      <div class="legend-badge"><span class="ann-badge badge-promo">Promotions</span></div>
+      <div>
+        <div class="legend-name">Promotions</div>
+        <div class="legend-desc">Large → Block E (current config) or Block A (Exp 1 control: was overlay) &nbsp;·&nbsp; Medium → not shown &nbsp;·&nbsp; Elements: Promotion tag</div>
       </div>
     </div>
     <div class="legend-row">
       <div class="legend-badge"><span class="ann-badge badge-feature">Features</span></div>
       <div>
         <div class="legend-name">Features</div>
-        <div class="legend-desc">ON/OFF. Visual feature — depends on card type. Large uses store image, Medium uses TopSellers carousel, Small has none.</div>
-        <div class="legend-elements">
-          <span class="el-pill">StorecardImage</span><span class="el-pill">TopSellers</span>
-        </div>
+        <div class="legend-desc">Large → Store image fills image area (no block) &nbsp;·&nbsp; Medium → Block B (TopSellers carousel) &nbsp;·&nbsp; Small → absent</div>
+      </div>
+    </div>
+    <div class="legend-row">
+      <div class="legend-badge"><span class="ann-badge badge-core">Core Info</span></div>
+      <div>
+        <div class="legend-name">Core Info</div>
+        <div class="legend-desc">All card types — fixed area below image (Large) or right of logo (Medium/Small). Always ON, no block assignment needed.</div>
       </div>
     </div>
   </div>
