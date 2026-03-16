@@ -2467,9 +2467,12 @@
       exps.push({
         id: 'exp1', name: 'Exp 1 — Promotions Position',
         variants: [
-          { label: 'Control — Old StoreCard', overrides: { promotionsPosition: 'overlay' } },
-          { label: 'T1 — Promos in image',    overrides: { promotionsPosition: 'below'   } },
-          { label: 'T2 — Promos outside',     overrides: { promotionsPosition: 'below'   } },
+          // Control: old layout — promo in Block A top-left, highlights banished to bottom-right
+          { label: 'Control — Old StoreCard', overrides: { promotionsPosition: 'overlay_old', highlightsPosition: 'bottom_right' } },
+          // T1: new block system, promo stays in image — Block A: Promo, Block B: Highlights
+          { label: 'T1 — Promos in image',    overrides: { promotionsPosition: 'overlay_new' } },
+          // T2: new block system, promo outside image — Block A: Highlights, Block B: TrustMarkers, Block E: Promos
+          { label: 'T2 — Promos outside',     overrides: { promotionsPosition: 'below'       } },
         ]
       });
     }
@@ -2549,15 +2552,36 @@
   function buildCard(cfg, store, cardId, hasPromo) {
     const hlEl  = cfg.highlights.on    ? cfg.highlights.hierarchy[0]    : null;
     const tmEl  = cfg.trustMarkers.on  ? cfg.trustMarkers.hierarchy[0]  : null;
-    const promoBelow = cfg.promotionsPosition === 'below';
+    const pos   = cfg.promotionsPosition || 'below'; // default: Block E
 
     if (cfg.cardType === 'large') {
-      const slot1 = hlEl ? tagHTML(hlEl, 'highlights',   cardId) : '';
-      const slot2 = tmEl ? tagHTML(tmEl, 'trustmarkers', cardId) : '';
-      const promoBelowHTML = cfg.promotions.on && hasPromo ? `
-        <div class="card-promotions">
-          <div class="tag orange"><div class="dot"></div>−20% Prime</div>
-        </div>` : '';
+      // Determine what goes in overlay slots and Block E based on promotionsPosition
+      let overlaySlot1 = '', overlaySlot2 = '', overlayPromoOld = '', blockE = '';
+
+      if (pos === 'overlay_old') {
+        // Control: old layout — promo top-left (Block A), Highlights bottom-right (outside block system)
+        if (hasPromo && cfg.promotions.on) {
+          overlayPromoOld = `<div class="overlay-single"><div class="tag orange"><div class="dot"></div>−20% Prime</div></div>`;
+        }
+        if (hlEl) overlaySlot2 = `<div class="overlay-bottom-right">${tagHTML(hlEl, 'highlights', cardId)}</div>`;
+      } else if (pos === 'overlay_new') {
+        // T1: new blocks — Block A: Promo, Block B: Highlights
+        if (hasPromo && cfg.promotions.on) {
+          overlaySlot1 = `<div class="tag orange"><div class="dot"></div>−20% Prime</div>`;
+          overlaySlot2 = hlEl ? tagHTML(hlEl, 'highlights', cardId) : '';
+        } else {
+          // No promo — fall back to Highlights in A, TrustMarkers in B
+          overlaySlot1 = hlEl ? tagHTML(hlEl, 'highlights',   cardId) : '';
+          overlaySlot2 = tmEl ? tagHTML(tmEl, 'trustmarkers', cardId) : '';
+        }
+      } else {
+        // T2 / default: Block A: Highlights, Block B: TrustMarkers, Block E: Promo
+        overlaySlot1 = hlEl ? tagHTML(hlEl, 'highlights',   cardId) : '';
+        overlaySlot2 = tmEl ? tagHTML(tmEl, 'trustmarkers', cardId) : '';
+        if (hasPromo && cfg.promotions.on) {
+          blockE = `<div class="card-promotions"><div class="tag orange"><div class="dot"></div>−20% Prime</div></div>`;
+        }
+      }
 
       return `
         <div class="storecard-large sim-card" id="${cardId}">
@@ -2565,10 +2589,15 @@
             <div class="img-overlay"></div>
             <div class="food-emoji">${store.emoji}</div>
             <div class="fav-btn">♡</div>
-            <div class="overlay-slots">
-              ${slot1}
-              ${slot2}
-            </div>
+            ${pos === 'overlay_old' ? `
+              ${overlayPromoOld}
+              ${overlaySlot2}
+            ` : `
+              <div class="overlay-slots">
+                ${overlaySlot1}
+                ${overlaySlot2}
+              </div>
+            `}
           </div>
           <div class="card-core">
             <div class="store-name">${store.name}</div>
@@ -2579,7 +2608,7 @@
               <span class="sep">·</span><span class="sponsored">Sponsored</span>
             </div>
           </div>
-          ${promoBelowHTML}
+          ${blockE}
         </div>`;
     }
 
@@ -2679,6 +2708,10 @@
     const experiments = getActiveExperiments(surface, vertical);
     const output      = document.getElementById('sim-output');
 
+    // Remember which tab is currently active before re-render
+    const activePanel = output.querySelector('.sim-tab-panel.active');
+    const activeTabId = activePanel ? activePanel.id : 'sim-tab-default';
+
     // clear state
     Object.keys(SIM_STATE).forEach(k => delete SIM_STATE[k]);
 
@@ -2743,6 +2776,20 @@
         ${defaultContent}
         ${expTabs}
       </div>`;
+
+    // Restore the previously active tab if it still exists, else default
+    const targetPanel = document.getElementById(activeTabId);
+    if (targetPanel) {
+      output.querySelectorAll('.sim-tab-panel').forEach(p => p.classList.remove('active'));
+      output.querySelectorAll('.sim-sub-btn').forEach(b => b.classList.remove('active'));
+      targetPanel.classList.add('active');
+      // Find and activate the matching button by its onclick attribute
+      output.querySelectorAll('.sim-sub-btn').forEach(b => {
+        if (b.getAttribute('onclick') && b.getAttribute('onclick').includes(activeTabId)) {
+          b.classList.add('active');
+        }
+      });
+    }
   }
 
   function simSwitchTab(tabId, btn) {
